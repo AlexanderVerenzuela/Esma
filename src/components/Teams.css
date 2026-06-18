@@ -24,7 +24,7 @@
   gap: 1rem;
 }
 
-.nav-btn {
+.carousel-nav-btn {
   width: 55px;
   height: 55px;
   border-radius: 50%;
@@ -37,17 +37,17 @@
   transition: all 0.3s ease;
 }
 
-.nav-btn svg {
+.carousel-nav-btn svg {
   transition: stroke 0.3s ease;
 }
 
-.nav-btn:hover {
+.carousel-nav-btn:hover {
   background-color: transparent;
   border-color: var(--primary);
   box-shadow: 0 0 25px rgba(204, 255, 0, 0.3);
 }
 
-.nav-btn:hover svg {
+.carousel-nav-btn:hover svg {
   stroke: var(--primary) !important;
 }
 

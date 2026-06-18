@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, Tags, Users, LogOut, Settings } from 'lucide-react';
+import { LayoutDashboard, Package, Tags, Users, LogOut, Settings, Menu, X } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import Login from './Login';
 import './Admin.css';
@@ -9,6 +9,7 @@ const AdminLayout = () => {
   const location = useLocation();
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -30,6 +31,8 @@ const AdminLayout = () => {
     await supabase.auth.signOut();
   };
 
+  const closeMenu = () => setIsMobileMenuOpen(false);
+
   if (loading) {
     return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#000', color: '#fff' }}>Cargando...</div>;
   }
@@ -40,24 +43,32 @@ const AdminLayout = () => {
 
   return (
     <div className="admin-container">
-      <aside className="admin-sidebar">
+      {/* Mobile Header */}
+      <div className="admin-mobile-topbar">
+        <div className="admin-brand-mobile">ESMA ADMIN</div>
+        <button className="admin-mobile-toggle" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          {isMobileMenuOpen ? <X size={24} color="#fff" /> : <Menu size={24} color="#fff" />}
+        </button>
+      </div>
+
+      <aside className={`admin-sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
         <div className="admin-brand">
           <h2>ESMA ADMIN</h2>
         </div>
         <nav className="admin-nav">
-          <Link to="/admin" className={location.pathname === '/admin' ? 'active' : ''}>
+          <Link to="/admin" className={location.pathname === '/admin' ? 'active' : ''} onClick={closeMenu}>
             <LayoutDashboard size={20} /> Dashboard
           </Link>
-          <Link to="/admin/products" className={location.pathname === '/admin/products' ? 'active' : ''}>
+          <Link to="/admin/products" className={location.pathname === '/admin/products' ? 'active' : ''} onClick={closeMenu}>
             <Package size={20} /> Productos
           </Link>
-          <Link to="/admin/categories" className={location.pathname === '/admin/categories' ? 'active' : ''}>
+          <Link to="/admin/categories" className={location.pathname === '/admin/categories' ? 'active' : ''} onClick={closeMenu}>
             <Tags size={20} /> Categorías
           </Link>
-          <Link to="/admin/teams" className={location.pathname === '/admin/teams' ? 'active' : ''}>
+          <Link to="/admin/teams" className={location.pathname === '/admin/teams' ? 'active' : ''} onClick={closeMenu}>
             <Users size={20} /> Equipos
           </Link>
-          <Link to="/admin/settings" className={location.pathname === '/admin/settings' ? 'active' : ''}>
+          <Link to="/admin/settings" className={location.pathname === '/admin/settings' ? 'active' : ''} onClick={closeMenu}>
             <Settings size={20} /> Configuración
           </Link>
           <a href="#" className="admin-logout" onClick={handleLogout}>
@@ -65,10 +76,11 @@ const AdminLayout = () => {
           </a>
         </nav>
       </aside>
+
       <main className="admin-main">
-        <header className="admin-header">
+        <header className="admin-header admin-main-header">
           <h3>Panel de Administración</h3>
-          <div style={{color: '#888', fontSize: '0.9rem'}}>{session.user.email}</div>
+          <div style={{color: '#888', fontSize: '0.9rem', wordBreak: 'break-all'}}>{session.user.email}</div>
         </header>
         <div className="admin-content">
           <Outlet />

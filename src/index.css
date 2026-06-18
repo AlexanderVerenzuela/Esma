@@ -88,6 +88,12 @@ p {
   text-align: center;
 }
 
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1.2rem;
+  }
+}
+
 .mb-2 { margin-bottom: 0.5rem; }
 .mb-4 { margin-bottom: 1.5rem; }
 .mt-4 { margin-top: 2rem; }

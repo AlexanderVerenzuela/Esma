@@ -61,10 +61,10 @@ const Teams = () => {
             <p>Algunos de los equipos que ya visten Esma Sportwear.</p>
           </div>
           <div className="teams-nav-buttons">
-            <button className="nav-btn" onClick={scrollPrev}>
+            <button className="carousel-nav-btn" onClick={scrollPrev}>
               <ArrowLeft size={20} strokeWidth={1} color="#fff" />
             </button>
-            <button className="nav-btn" onClick={scrollNext}>
+            <button className="carousel-nav-btn" onClick={scrollNext}>
               <ArrowRight size={20} strokeWidth={1} color="#fff" />
             </button>
           </div>
