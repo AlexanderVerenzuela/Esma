@@ -44,7 +44,7 @@
 }
 
 .admin-nav a:hover, .admin-nav a.active {
-  background-color: rgba(204, 255, 0, 0.1);
+  background-color: rgba(var(--primary-rgb), 0.1);
   color: var(--primary);
   border-right: 3px solid var(--primary);
 }
@@ -187,7 +187,7 @@
 .admin-input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 10px rgba(204, 255, 0, 0.1);
+  box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.1);
 }
 
 .flex-between {
@@ -306,14 +306,14 @@
   align-items: center;
   justify-content: center;
   background-color: #050505;
-  background-image: radial-gradient(rgba(204, 255, 0, 0.05) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(var(--primary-rgb), 0.05) 1px, transparent 1px);
   background-size: 40px 40px;
   padding: 2rem;
 }
 
 .login-box {
   background-color: #0a0a0a;
-  border: 1px solid rgba(204, 255, 0, 0.1);
+  border: 1px solid rgba(var(--primary-rgb), 0.1);
   padding: 3rem;
   border-radius: 24px;
   width: 100%;
@@ -379,7 +379,7 @@
 .login-box .form-group input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 10px rgba(204, 255, 0, 0.1);
+  box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.1);
 }
 
 .login-box .form-group label {

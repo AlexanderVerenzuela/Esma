@@ -30,7 +30,7 @@ const Features = () => {
             <div className="features-grid">
               <div className="feature-item">
                 <div className="feature-icon-wrapper">
-                  <Palette size={20} color="#CCFF00" />
+                  <Palette size={20} color="var(--primary)" />
                 </div>
                 <div>
                   <h3>COLORES</h3>
@@ -39,7 +39,7 @@ const Features = () => {
               </div>
               <div className="feature-item">
                 <div className="feature-icon-wrapper">
-                  <ImageIcon size={20} color="#CCFF00" />
+                  <ImageIcon size={20} color="var(--primary)" />
                 </div>
                 <div>
                   <h3>LOGOS</h3>
@@ -48,7 +48,7 @@ const Features = () => {
               </div>
               <div className="feature-item">
                 <div className="feature-icon-wrapper">
-                  <Type size={20} color="#CCFF00" />
+                  <Type size={20} color="var(--primary)" />
                 </div>
                 <div>
                   <h3>NOMBRES</h3>
@@ -57,7 +57,7 @@ const Features = () => {
               </div>
               <div className="feature-item">
                 <div className="feature-icon-wrapper">
-                  <ShieldCheck size={20} color="#CCFF00" />
+                  <ShieldCheck size={20} color="var(--primary)" />
                 </div>
                 <div>
                   <h3>PATROCINIOS</h3>
