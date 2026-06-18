@@ -74,15 +74,14 @@
   display: flex;
   backface-visibility: hidden;
   touch-action: pan-y;
-  gap: 1.5rem;
-  /* Add some offset so it centers nicely */
-  margin-left: calc(1.5rem / 2);
+  margin-left: -1.5rem;
 }
 
 .embla__slide {
   flex: 0 0 auto;
   min-width: 0;
   cursor: grab;
+  padding-left: 1.5rem;
 }
 
 .embla__slide:active {
