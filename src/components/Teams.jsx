@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { supabase } from '../supabaseClient';
 import './Teams.css';
 
 const fallbackData = [
@@ -16,18 +17,16 @@ const Teams = () => {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const res = await fetch('http://localhost:3000/api/teams');
-        if (res.ok) {
-          const data = await res.json();
-          if (data.length > 0) {
-            setTeamsData(data);
-          } else {
-            setTeamsData(fallbackData);
-          }
+        const { data, error } = await supabase.from('teams').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+          setTeamsData(data);
         } else {
           setTeamsData(fallbackData);
         }
       } catch (err) {
+        console.error(err);
         setTeamsData(fallbackData);
       }
     };

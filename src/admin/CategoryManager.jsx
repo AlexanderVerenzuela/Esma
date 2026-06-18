@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
+import { supabase } from '../supabaseClient';
 
 const CategoryManager = () => {
   const [categories, setCategories] = useState([]);
@@ -11,9 +12,9 @@ const CategoryManager = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/categories');
-      const data = await res.json();
-      setCategories(data);
+      const { data, error } = await supabase.from('categories').select('*').order('id', { ascending: true });
+      if (error) throw error;
+      setCategories(data || []);
     } catch (err) {
       console.error(err);
     }
@@ -23,34 +24,25 @@ const CategoryManager = () => {
     e.preventDefault();
     if (!newCategory.trim()) return;
     try {
-      const res = await fetch('http://localhost:3000/api/categories', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newCategory })
-      });
-      if (res.ok) {
-        setNewCategory('');
-        fetchCategories();
-      }
+      const { error } = await supabase.from('categories').insert([{ name: newCategory }]);
+      if (error) throw error;
+      setNewCategory('');
+      fetchCategories();
     } catch (err) {
       console.error(err);
+      alert('Error al agregar categoría: ' + err.message);
     }
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm('¿Seguro que deseas eliminar esta categoría?')) return;
     try {
-      const res = await fetch(`http://localhost:3000/api/categories/${id}`, {
-        method: 'DELETE'
-      });
-      if (res.ok) {
-        fetchCategories();
-      } else {
-        const data = await res.json();
-        alert(data.error);
-      }
+      const { error } = await supabase.from('categories').delete().eq('id', id);
+      if (error) throw error;
+      fetchCategories();
     } catch (err) {
       console.error(err);
+      alert('No se puede eliminar la categoría. Probablemente está en uso por algún producto.');
     }
   };
 

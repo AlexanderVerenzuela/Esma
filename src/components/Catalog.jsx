@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ArrowRight } from 'lucide-react';
+import { supabase } from '../supabaseClient';
 import './Catalog.css';
 
 const Catalog = () => {
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [activeCategory, setActiveCategory] = useState('TODAS');
+  const [categories, setCategories] = useState([{ id: 'todos', name: 'Todos' }]);
+  const [activeCategory, setActiveCategory] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -14,14 +15,26 @@ const Catalog = () => {
 
   const fetchData = async () => {
     try {
-      const [prodRes, catRes] = await Promise.all([
-        fetch('http://localhost:3000/api/products'),
-        fetch('http://localhost:3000/api/categories')
-      ]);
-      const prods = await prodRes.json();
-      const cats = await catRes.json();
-      setProducts(prods);
-      setCategories(cats);
+      const { data: catData, error: catError } = await supabase.from('categories').select('*');
+      if (catError) throw catError;
+      setCategories([{ id: 'todos', name: 'Todos' }, ...catData]);
+
+      const { data: prodData, error: prodError } = await supabase
+        .from('products')
+        .select(`
+          *,
+          categories:category_id (name)
+        `)
+        .order('created_at', { ascending: false });
+      
+      if (prodError) throw prodError;
+
+      const formatted = prodData.map(p => ({
+        ...p,
+        category: p.categories?.name,
+        image: p.main_image
+      }));
+      setProducts(formatted);
     } catch (err) {
       console.error(err);
     }
@@ -29,7 +42,7 @@ const Catalog = () => {
 
   const filteredProducts = products.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.code.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCat = activeCategory === 'TODAS' || p.categoryName === activeCategory;
+    const matchesCat = activeCategory === 'Todos' || p.category === activeCategory;
     return matchesSearch && matchesCat;
   });
 

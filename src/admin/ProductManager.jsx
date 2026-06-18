@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Edit, Upload } from 'lucide-react';
+import { Plus, Upload, Trash2, Edit } from 'lucide-react';
+import { supabase } from '../supabaseClient';
 
 const ProductManager = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState('');
   
   const [formData, setFormData] = useState({
     code: '',
     name: '',
     categoryId: '',
     description: '',
-    mainImage: '',
-    isFeatured: false,
-    gallery: []
+    mainImage: null,
+    isFeatured: false
   });
 
   useEffect(() => {
@@ -22,180 +23,248 @@ const ProductManager = () => {
     fetchCategories();
   }, []);
 
-  const fetchProducts = async () => {
-    try {
-      const res = await fetch('http://localhost:3000/api/products');
-      const data = await res.json();
-      setProducts(data);
-    } catch (err) { console.error(err); }
-  };
-
   const fetchCategories = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/categories');
-      const data = await res.json();
-      setCategories(data);
-    } catch (err) { console.error(err); }
+      const { data, error } = await supabase.from('categories').select('*');
+      if (!error) setCategories(data || []);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const handleFileUpload = async (e, field) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const fd = new FormData();
-    fd.append('image', file);
-
+  const fetchProducts = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/upload', {
-        method: 'POST',
-        body: fd
-      });
-      const data = await res.json();
-      if (res.ok) {
-        if (field === 'mainImage') {
-          setFormData({ ...formData, mainImage: data.url });
-        } else if (field === 'gallery') {
-          setFormData({ ...formData, gallery: [...formData.gallery, data.url] });
-        }
-      }
-    } catch (err) { console.error(err); }
+      // Fetch products and join categories
+      const { data, error } = await supabase
+        .from('products')
+        .select(`
+          *,
+          categories:category_id (name)
+        `)
+        .order('created_at', { ascending: false });
+        
+      if (error) throw error;
+      
+      const formatted = data.map(p => ({
+        ...p,
+        categoryName: p.categories?.name,
+        categoryId: p.category_id,
+        mainImage: p.main_image,
+        isFeatured: p.is_featured
+      }));
+      setProducts(formatted);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, mainImage: file });
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const uploadImage = async (file) => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random()}.${fileExt}`;
+    const filePath = `products/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('images')
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data } = supabase.storage.from('images').getPublicUrl(filePath);
+    return data.publicUrl;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.code || !formData.name || !formData.categoryId || !formData.mainImage) {
+      alert('Por favor completa todos los campos requeridos y selecciona una imagen.');
+      return;
+    }
+    
+    setLoading(true);
     try {
-      const url = editingId ? `http://localhost:3000/api/products/${editingId}` : 'http://localhost:3000/api/products';
-      const method = editingId ? 'PUT' : 'POST';
+      const imageUrl = typeof formData.mainImage === 'string' ? formData.mainImage : await uploadImage(formData.mainImage);
       
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
+      const productData = {
+        code: formData.code,
+        name: formData.name,
+        category_id: parseInt(formData.categoryId),
+        description: formData.description,
+        main_image: imageUrl,
+        is_featured: formData.isFeatured,
+        gallery: []
+      };
+
+      const { error } = await supabase.from('products').insert([productData]);
+      if (error) throw error;
       
-      if (res.ok) {
-        setShowForm(false);
-        setEditingId(null);
-        setFormData({ code: '', name: '', categoryId: '', description: '', mainImage: '', isFeatured: false, gallery: [] });
-        fetchProducts();
-      } else {
-        const data = await res.json();
-        alert(data.error);
-      }
-    } catch (err) { console.error(err); }
+      setShowForm(false);
+      resetForm();
+      fetchProducts();
+    } catch (err) {
+      console.error(err);
+      alert('Error al guardar el producto: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleEdit = (prod) => {
-    setFormData({
-      code: prod.code,
-      name: prod.name,
-      categoryId: prod.categoryId,
-      description: prod.description || '',
-      mainImage: prod.mainImage,
-      isFeatured: prod.isFeatured,
-      gallery: prod.gallery || []
-    });
-    setEditingId(prod.id);
-    setShowForm(true);
-  };
-
-  const handleDelete = async (id) => {
+  const handleDelete = async (product) => {
     if (!window.confirm('¿Seguro que deseas eliminar este producto?')) return;
     try {
-      const res = await fetch(`http://localhost:3000/api/products/${id}`, { method: 'DELETE' });
-      if (res.ok) fetchProducts();
-    } catch (err) { console.error(err); }
+      // 1. Delete image from storage
+      if (product.mainImage) {
+        const urlParts = product.mainImage.split('/images/');
+        if (urlParts.length > 1) {
+          const filePath = urlParts[1];
+          await supabase.storage.from('images').remove([filePath]);
+        }
+      }
+
+      // 2. Delete product record
+      const { error } = await supabase.from('products').delete().eq('id', product.id);
+      if (error) throw error;
+      fetchProducts();
+    } catch (err) {
+      console.error(err);
+      alert('Error al eliminar: ' + err.message);
+    }
   };
 
-  if (showForm) {
-    return (
-      <div className="admin-card">
-        <h2 style={{ fontSize: '1.5rem', marginBottom: '2rem' }}>{editingId ? 'Editar Producto' : 'Nuevo Producto'}</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="admin-form-group">
-            <label>Código del Producto</label>
-            <input type="text" className="admin-input" required value={formData.code} onChange={e => setFormData({...formData, code: e.target.value})} />
-          </div>
-          <div className="admin-form-group">
-            <label>Nombre</label>
-            <input type="text" className="admin-input" required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
-          </div>
-          <div className="admin-form-group">
-            <label>Categoría</label>
-            <select className="admin-input" required value={formData.categoryId} onChange={e => setFormData({...formData, categoryId: e.target.value})}>
-              <option value="">Selecciona una categoría</option>
-              {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </select>
-          </div>
-          <div className="admin-form-group">
-            <label>Descripción</label>
-            <textarea className="admin-input" rows="3" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
-          </div>
-          <div className="admin-form-group">
-            <label>Imagen Principal</label>
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              {formData.mainImage && <img src={formData.mainImage} alt="Main" style={{ width: '50px', height: '50px', objectFit: 'cover' }} />}
-              <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer' }}>
-                <Upload size={18} /> Subir Imagen
-                <input type="file" style={{ display: 'none' }} accept="image/*" onChange={e => handleFileUpload(e, 'mainImage')} />
-              </label>
-            </div>
-          </div>
-          <div className="admin-form-group">
-            <label>
-              <input type="checkbox" checked={formData.isFeatured} onChange={e => setFormData({...formData, isFeatured: e.target.checked})} /> Destacado
-            </label>
-          </div>
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-            <button type="submit" className="admin-btn">Guardar</button>
-            <button type="button" className="admin-btn admin-btn-secondary" onClick={() => setShowForm(false)}>Cancelar</button>
-          </div>
-        </form>
-      </div>
-    );
-  }
+  const resetForm = () => {
+    setFormData({
+      code: '',
+      name: '',
+      categoryId: '',
+      description: '',
+      mainImage: null,
+      isFeatured: false
+    });
+    setPreviewUrl('');
+  };
 
   return (
-    <div className="admin-card">
-      <div className="flex-between" style={{ marginBottom: '2rem' }}>
-        <h2 style={{ fontSize: '1.5rem' }}>Productos</h2>
-        <button className="admin-btn" onClick={() => { setEditingId(null); setFormData({ code: '', name: '', categoryId: '', description: '', mainImage: '', isFeatured: false, gallery: [] }); setShowForm(true); }}>
-          <Plus size={18} /> Nuevo Producto
+    <div className="admin-page">
+      <div className="admin-header">
+        <h1>Gestión de Productos</h1>
+        <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
+          <Plus size={20} />
+          {showForm ? 'Cancelar' : 'Nuevo Producto'}
         </button>
       </div>
 
-      <table className="admin-table">
-        <thead>
-          <tr>
-            <th>Img</th>
-            <th>Código</th>
-            <th>Nombre</th>
-            <th>Categoría</th>
-            <th>Destacado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map(prod => (
-            <tr key={prod.id}>
-              <td><img src={prod.mainImage} alt={prod.name} style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} /></td>
-              <td>{prod.code}</td>
-              <td>{prod.name}</td>
-              <td>{prod.categoryName}</td>
-              <td>{prod.isFeatured ? 'Sí' : 'No'}</td>
-              <td>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <button className="admin-btn admin-btn-secondary" onClick={() => handleEdit(prod)}><Edit size={16} /></button>
-                  <button className="admin-btn admin-btn-danger" onClick={() => handleDelete(prod.id)}><Trash2 size={16} /></button>
-                </div>
-              </td>
-            </tr>
-          ))}
-          {products.length === 0 && (
-            <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem' }}>No hay productos</td></tr>
-          )}
-        </tbody>
-      </table>
+      {showForm && (
+        <div className="admin-card">
+          <h2>Agregar Nuevo Producto</h2>
+          <form onSubmit={handleSubmit} className="admin-form">
+            <div className="form-group">
+              <label>Código del Producto</label>
+              <input 
+                type="text" 
+                value={formData.code} 
+                onChange={e => setFormData({...formData, code: e.target.value})}
+                placeholder="Ej. ESMA-001"
+              />
+            </div>
+            
+            <div className="form-group">
+              <label>Nombre</label>
+              <input 
+                type="text" 
+                value={formData.name} 
+                onChange={e => setFormData({...formData, name: e.target.value})}
+                placeholder="Nombre del producto"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Categoría</label>
+              <select 
+                value={formData.categoryId} 
+                onChange={e => setFormData({...formData, categoryId: e.target.value})}
+              >
+                <option value="">Selecciona una categoría</option>
+                {categories.map(c => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>Descripción</label>
+              <textarea 
+                value={formData.description} 
+                onChange={e => setFormData({...formData, description: e.target.value})}
+                placeholder="Descripción del producto..."
+                rows="4"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Imagen Principal</label>
+              <div className="image-upload-box">
+                <input type="file" accept="image/*" id="mainImage" onChange={handleImageChange} hidden />
+                <label htmlFor="mainImage" className="upload-label">
+                  {previewUrl ? (
+                    <img src={previewUrl} alt="Preview" className="upload-preview" />
+                  ) : (
+                    <div className="upload-placeholder">
+                      <Upload size={32} />
+                      <span>Seleccionar Imagen</span>
+                    </div>
+                  )}
+                </label>
+              </div>
+            </div>
+
+            <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <input 
+                type="checkbox" 
+                id="isFeatured"
+                checked={formData.isFeatured}
+                onChange={e => setFormData({...formData, isFeatured: e.target.checked})}
+                style={{ width: 'auto' }}
+              />
+              <label htmlFor="isFeatured" style={{ margin: 0 }}>¿Destacar este producto en el Inicio?</label>
+            </div>
+
+            <button type="submit" className="btn btn-primary" disabled={loading}>
+              {loading ? 'Guardando...' : 'Guardar Producto'}
+            </button>
+          </form>
+        </div>
+      )}
+
+      <div className="admin-grid">
+        {products.map(product => (
+          <div key={product.id} className="admin-card product-card">
+            <div className="product-image-preview">
+              <img src={product.mainImage} alt={product.name} />
+              {product.isFeatured && <span className="featured-badge">Destacado</span>}
+            </div>
+            <div className="product-card-info">
+              <span className="product-code">{product.code}</span>
+              <h3>{product.name}</h3>
+              <p className="product-category">{product.categoryName}</p>
+            </div>
+            <div className="product-card-actions">
+              <button className="btn btn-icon btn-danger" onClick={() => handleDelete(product)}>
+                <Trash2 size={18} />
+              </button>
+            </div>
+          </div>
+        ))}
+        {products.length === 0 && !showForm && (
+          <p className="empty-state">No hay productos registrados aún.</p>
+        )}
+      </div>
     </div>
   );
 };

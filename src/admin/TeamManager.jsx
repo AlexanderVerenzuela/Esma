@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Trash2, Upload, Plus } from 'lucide-react';
+import { supabase } from '../supabaseClient';
 import './Admin.css';
 
 const TeamManager = () => {
@@ -19,9 +20,9 @@ const TeamManager = () => {
 
   const fetchTeams = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/teams');
-      const data = await res.json();
-      setTeams(data);
+      const { data, error } = await supabase.from('teams').select('*').order('created_at', { ascending: false });
+      if (error) throw error;
+      setTeams(data || []);
     } catch (err) {
       console.error(err);
     }
@@ -36,14 +37,18 @@ const TeamManager = () => {
   };
 
   const uploadImage = async (file) => {
-    const formData = new FormData();
-    formData.append('image', file);
-    const res = await fetch('http://localhost:3000/api/upload', {
-      method: 'POST',
-      body: formData,
-    });
-    const data = await res.json();
-    return data.url;
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random()}.${fileExt}`;
+    const filePath = `teams/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('images')
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data } = supabase.storage.from('images').getPublicUrl(filePath);
+    return data.publicUrl;
   };
 
   const handleSubmit = async (e) => {
@@ -62,11 +67,8 @@ const TeamManager = () => {
         image: imageUrl
       };
 
-      await fetch('http://localhost:3000/api/teams', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(teamData)
-      });
+      const { error } = await supabase.from('teams').insert([teamData]);
+      if (error) throw error;
       
       setShowForm(false);
       setFormData({ name: '', year: new Date().getFullYear().toString(), image: null });
@@ -74,16 +76,34 @@ const TeamManager = () => {
       fetchTeams();
     } catch (err) {
       console.error(err);
-      alert('Error al guardar el equipo.');
+      alert('Error al guardar el equipo: ' + err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('¿Eliminar este equipo?')) {
-      await fetch(`http://localhost:3000/api/teams/${id}`, { method: 'DELETE' });
+  const handleDelete = async (team) => {
+    if (!window.confirm('¿Eliminar este equipo?')) return;
+    
+    try {
+      // 1. Delete image from storage
+      if (team.image) {
+        // Extract filepath from URL
+        const urlParts = team.image.split('/images/');
+        if (urlParts.length > 1) {
+          const filePath = urlParts[1];
+          await supabase.storage.from('images').remove([filePath]);
+        }
+      }
+
+      // 2. Delete record
+      const { error } = await supabase.from('teams').delete().eq('id', team.id);
+      if (error) throw error;
+      
       fetchTeams();
+    } catch (err) {
+      console.error(err);
+      alert('Error al eliminar: ' + err.message);
     }
   };
 
@@ -156,7 +176,7 @@ const TeamManager = () => {
               <p>Año: {team.year}</p>
             </div>
             <div className="product-card-actions">
-              <button className="btn btn-icon btn-danger" onClick={() => handleDelete(team.id)}>
+              <button className="btn btn-icon btn-danger" onClick={() => handleDelete(team)}>
                 <Trash2 size={18} />
               </button>
             </div>
