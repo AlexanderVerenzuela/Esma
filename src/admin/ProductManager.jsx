@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Upload, Trash2, Edit } from 'lucide-react';
+import { Plus, Upload, Trash2, Edit, Search } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 
 const ProductManager = () => {
@@ -8,6 +8,8 @@ const ProductManager = () => {
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [editingId, setEditingId] = useState(null);
   
   const [formData, setFormData] = useState({
     code: '',
@@ -34,7 +36,6 @@ const ProductManager = () => {
 
   const fetchProducts = async () => {
     try {
-      // Fetch products and join categories
       const { data, error } = await supabase
         .from('products')
         .select(`
@@ -83,30 +84,45 @@ const ProductManager = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.code || !formData.name || !formData.categoryId || !formData.mainImage) {
-      alert('Por favor completa todos los campos requeridos y selecciona una imagen.');
+    if (!formData.code || !formData.name || !formData.categoryId) {
+      alert('Por favor completa todos los campos requeridos.');
+      return;
+    }
+
+    if (!editingId && !formData.mainImage) {
+      alert('Por favor selecciona una imagen para el nuevo producto.');
       return;
     }
     
     setLoading(true);
     try {
-      const imageUrl = typeof formData.mainImage === 'string' ? formData.mainImage : await uploadImage(formData.mainImage);
+      let imageUrl = formData.mainImage;
+      if (typeof formData.mainImage !== 'string' && formData.mainImage !== null) {
+        imageUrl = await uploadImage(formData.mainImage);
+      }
       
       const productData = {
         code: formData.code,
         name: formData.name,
         category_id: parseInt(formData.categoryId),
         description: formData.description,
-        main_image: imageUrl,
         is_featured: formData.isFeatured,
-        gallery: []
       };
 
-      const { error } = await supabase.from('products').insert([productData]);
-      if (error) throw error;
+      if (imageUrl) {
+        productData.main_image = imageUrl;
+      }
+
+      if (editingId) {
+        const { error } = await supabase.from('products').update(productData).eq('id', editingId);
+        if (error) throw error;
+      } else {
+        productData.gallery = [];
+        const { error } = await supabase.from('products').insert([productData]);
+        if (error) throw error;
+      }
       
-      setShowForm(false);
-      resetForm();
+      handleCancelForm();
       fetchProducts();
     } catch (err) {
       console.error(err);
@@ -116,10 +132,24 @@ const ProductManager = () => {
     }
   };
 
+  const handleEdit = (product) => {
+    setFormData({
+      code: product.code,
+      name: product.name,
+      categoryId: product.categoryId,
+      description: product.description || '',
+      mainImage: product.mainImage,
+      isFeatured: product.isFeatured
+    });
+    setPreviewUrl(product.mainImage);
+    setEditingId(product.id);
+    setShowForm(true);
+    window.scrollTo(0, 0);
+  };
+
   const handleDelete = async (product) => {
     if (!window.confirm('¿Seguro que deseas eliminar este producto?')) return;
     try {
-      // 1. Delete image from storage
       if (product.mainImage) {
         const urlParts = product.mainImage.split('/images/');
         if (urlParts.length > 1) {
@@ -128,7 +158,6 @@ const ProductManager = () => {
         }
       }
 
-      // 2. Delete product record
       const { error } = await supabase.from('products').delete().eq('id', product.id);
       if (error) throw error;
       fetchProducts();
@@ -138,7 +167,9 @@ const ProductManager = () => {
     }
   };
 
-  const resetForm = () => {
+  const handleCancelForm = () => {
+    setShowForm(false);
+    setEditingId(null);
     setFormData({
       code: '',
       name: '',
@@ -150,19 +181,37 @@ const ProductManager = () => {
     setPreviewUrl('');
   };
 
+  const filteredProducts = products.filter(p => 
+    p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    p.code.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="admin-page">
-      <div className="admin-header">
+      <div className="admin-header flex-between" style={{ marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <h1>Gestión de Productos</h1>
-        <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
+        <button className="btn btn-primary" onClick={showForm ? handleCancelForm : () => setShowForm(true)}>
           <Plus size={20} />
           {showForm ? 'Cancelar' : 'Nuevo Producto'}
         </button>
       </div>
 
+      <div style={{ marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#0a0a0a', border: '1px solid #333', borderRadius: '8px', padding: '0.5rem 1rem' }}>
+          <Search size={20} color="#888" style={{ marginRight: '10px' }} />
+          <input 
+            type="text" 
+            placeholder="Buscar producto por nombre o código..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{ flex: 1, backgroundColor: 'transparent', border: 'none', color: '#fff', outline: 'none', fontSize: '1rem' }}
+          />
+        </div>
+      </div>
+
       {showForm && (
         <div className="admin-card">
-          <h2>Agregar Nuevo Producto</h2>
+          <h2>{editingId ? 'Editar Producto' : 'Agregar Nuevo Producto'}</h2>
           <form onSubmit={handleSubmit} className="admin-form">
             <div className="form-group">
               <label>Código del Producto</label>
@@ -236,14 +285,14 @@ const ProductManager = () => {
             </div>
 
             <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? 'Guardando...' : 'Guardar Producto'}
+              {loading ? 'Guardando...' : (editingId ? 'Actualizar Producto' : 'Guardar Producto')}
             </button>
           </form>
         </div>
       )}
 
       <div className="admin-grid">
-        {products.map(product => (
+        {filteredProducts.map(product => (
           <div key={product.id} className="admin-card product-card">
             <div className="product-image-preview">
               <img src={product.mainImage} alt={product.name} />
@@ -254,15 +303,20 @@ const ProductManager = () => {
               <h3>{product.name}</h3>
               <p className="product-category">{product.categoryName}</p>
             </div>
-            <div className="product-card-actions">
+            <div className="product-card-actions" style={{ gap: '0.5rem', display: 'flex', justifyContent: 'flex-end' }}>
+              <button className="btn btn-icon" onClick={() => handleEdit(product)} style={{ backgroundColor: 'transparent', border: '1px solid #444', color: '#fff' }}>
+                <Edit size={18} />
+              </button>
               <button className="btn btn-icon btn-danger" onClick={() => handleDelete(product)}>
                 <Trash2 size={18} />
               </button>
             </div>
           </div>
         ))}
-        {products.length === 0 && !showForm && (
-          <p className="empty-state">No hay productos registrados aún.</p>
+        {filteredProducts.length === 0 && !showForm && (
+          <p className="empty-state">
+            {searchQuery ? 'No se encontraron productos que coincidan con la búsqueda.' : 'No hay productos registrados aún.'}
+          </p>
         )}
       </div>
     </div>

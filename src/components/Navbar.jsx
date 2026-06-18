@@ -15,7 +15,9 @@ const Navbar = () => {
   return (
     <nav className={`navbar ${scrolled ? 'scrolled glass' : ''}`}>
       <div className="container nav-container">
-        <a href="#" className="brand">ESMA<span className="brand-accent">SPORTWEAR</span></a>
+        <a href="#" className="brand">
+          <img src="/images/logo.png" alt="ESMA Sportwear" className="nav-logo" />
+        </a>
         <ul className="nav-links">
           <li><a href="#catalogo">Catálogo</a></li>
           <li><a href="#equipos">Equipos</a></li>

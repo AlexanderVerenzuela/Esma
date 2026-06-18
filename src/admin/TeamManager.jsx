@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Upload, Plus } from 'lucide-react';
+import { Trash2, Upload, Plus, Edit } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import './Admin.css';
 
@@ -13,6 +13,7 @@ const TeamManager = () => {
   });
   const [previewUrl, setPreviewUrl] = useState('');
   const [loading, setLoading] = useState(false);
+  const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
     fetchTeams();
@@ -53,26 +54,41 @@ const TeamManager = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.year || !formData.image) {
-      alert('Por favor completa todos los campos y selecciona una imagen.');
+    if (!formData.name || !formData.year) {
+      alert('Por favor completa todos los campos.');
+      return;
+    }
+
+    if (!editingId && !formData.image) {
+      alert('Por favor selecciona una imagen para el nuevo equipo.');
       return;
     }
     
     setLoading(true);
     try {
-      const imageUrl = await uploadImage(formData.image);
+      let imageUrl = formData.image;
+      if (typeof formData.image !== 'string' && formData.image !== null) {
+        imageUrl = await uploadImage(formData.image);
+      }
+
       const teamData = {
         name: formData.name,
         year: formData.year,
-        image: imageUrl
       };
 
-      const { error } = await supabase.from('teams').insert([teamData]);
-      if (error) throw error;
+      if (imageUrl) {
+        teamData.image = imageUrl;
+      }
+
+      if (editingId) {
+        const { error } = await supabase.from('teams').update(teamData).eq('id', editingId);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('teams').insert([teamData]);
+        if (error) throw error;
+      }
       
-      setShowForm(false);
-      setFormData({ name: '', year: new Date().getFullYear().toString(), image: null });
-      setPreviewUrl('');
+      handleCancelForm();
       fetchTeams();
     } catch (err) {
       console.error(err);
@@ -82,13 +98,23 @@ const TeamManager = () => {
     }
   };
 
+  const handleEdit = (team) => {
+    setFormData({
+      name: team.name,
+      year: team.year,
+      image: team.image,
+    });
+    setPreviewUrl(team.image);
+    setEditingId(team.id);
+    setShowForm(true);
+    window.scrollTo(0, 0);
+  };
+
   const handleDelete = async (team) => {
     if (!window.confirm('¿Eliminar este equipo?')) return;
     
     try {
-      // 1. Delete image from storage
       if (team.image) {
-        // Extract filepath from URL
         const urlParts = team.image.split('/images/');
         if (urlParts.length > 1) {
           const filePath = urlParts[1];
@@ -96,7 +122,6 @@ const TeamManager = () => {
         }
       }
 
-      // 2. Delete record
       const { error } = await supabase.from('teams').delete().eq('id', team.id);
       if (error) throw error;
       
@@ -107,11 +132,22 @@ const TeamManager = () => {
     }
   };
 
+  const handleCancelForm = () => {
+    setShowForm(false);
+    setEditingId(null);
+    setFormData({
+      name: '',
+      year: new Date().getFullYear().toString(),
+      image: null,
+    });
+    setPreviewUrl('');
+  };
+
   return (
     <div className="admin-page">
-      <div className="admin-header">
+      <div className="admin-header flex-between" style={{ marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <h1>Gestión de Equipos</h1>
-        <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
+        <button className="btn btn-primary" onClick={showForm ? handleCancelForm : () => setShowForm(true)}>
           <Plus size={20} />
           {showForm ? 'Cancelar' : 'Nuevo Equipo'}
         </button>
@@ -119,7 +155,7 @@ const TeamManager = () => {
 
       {showForm && (
         <div className="admin-card">
-          <h2>Agregar Nuevo Equipo</h2>
+          <h2>{editingId ? 'Editar Equipo' : 'Agregar Nuevo Equipo'}</h2>
           <form onSubmit={handleSubmit} className="admin-form">
             <div className="form-group">
               <label>Nombre del Equipo / Cliente</label>
@@ -159,7 +195,7 @@ const TeamManager = () => {
             </div>
 
             <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? 'Guardando...' : 'Guardar Equipo'}
+              {loading ? 'Guardando...' : (editingId ? 'Actualizar Equipo' : 'Guardar Equipo')}
             </button>
           </form>
         </div>
@@ -175,7 +211,10 @@ const TeamManager = () => {
               <h3>{team.name}</h3>
               <p>Año: {team.year}</p>
             </div>
-            <div className="product-card-actions">
+            <div className="product-card-actions" style={{ gap: '0.5rem', display: 'flex', justifyContent: 'flex-end' }}>
+              <button className="btn btn-icon" onClick={() => handleEdit(team)} style={{ backgroundColor: 'transparent', border: '1px solid #444', color: '#fff' }}>
+                <Edit size={18} />
+              </button>
               <button className="btn btn-icon btn-danger" onClick={() => handleDelete(team)}>
                 <Trash2 size={18} />
               </button>

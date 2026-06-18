@@ -1,10 +1,14 @@
 .hero {
-  height: 100vh;
+  height: calc(100vh - 90px);
   min-height: 700px;
   display: flex;
   align-items: center;
   position: relative;
   background: url('/images/hero_background_1781810278116.png') center/cover no-repeat;
+  border-radius: 20px;
+  margin: 0 auto 2rem auto;
+  max-width: 96%;
+  overflow: hidden;
 }
 
 .hero-overlay {

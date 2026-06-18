@@ -51,27 +51,46 @@
   stroke: var(--primary) !important;
 }
 
-.teams-carousel-container {
-  padding-left: max(2rem, calc((100vw - 1200px) / 2));
+/* Embla Carousel Styles */
+.embla {
+  overflow: hidden;
+  /* Create fade effect on left and right edges */
+  mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+  
+  /* Stretch to full viewport width to allow centered align to work perfectly */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  
+  /* Padding for drop shadows to not get cut off */
+  padding: 2rem 0; 
 }
 
-.teams-carousel {
+.embla__container {
   display: flex;
+  backface-visibility: hidden;
+  touch-action: pan-y;
   gap: 1.5rem;
-  overflow-x: auto;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
-  padding-bottom: 2rem;
-  padding-right: 2rem; /* Add padding to the right so last item doesn't stick to edge */
-  scroll-behavior: smooth;
+  /* Add some offset so it centers nicely */
+  margin-left: calc(1.5rem / 2);
 }
 
-.teams-carousel::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+.embla__slide {
+  flex: 0 0 auto;
+  min-width: 0;
+  cursor: grab;
+}
+
+.embla__slide:active {
+  cursor: grabbing;
 }
 
 .team-card {
-  min-width: 350px;
+  width: 380px;
   height: 500px;
   border-radius: 20px;
   background-size: cover;
@@ -82,9 +101,11 @@
   border: 1px solid rgba(255,255,255,0.05);
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   transition: transform 0.3s ease;
+  pointer-events: none; /* Prevents dragging from capturing the image instead of the slide */
 }
 
-.team-card:hover {
+/* We don't hover scale in drag mode as it feels glitchy, but we can keep a subtle brightness shift */
+.embla__slide:hover .team-card {
   transform: translateY(-5px);
 }
 
@@ -133,7 +154,7 @@
 
 @media (max-width: 1024px) {
   .team-card {
-    min-width: 300px;
+    width: 300px;
     height: 400px;
   }
 }
@@ -143,11 +164,5 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 1.5rem;
-  }
-  .teams-carousel-container {
-    padding-left: 1rem;
-  }
-  .teams-carousel {
-    padding-right: 1rem;
   }
 }

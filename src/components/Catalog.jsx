@@ -72,19 +72,13 @@ const Catalog = () => {
         </div>
 
         <div className="catalog-filters">
-          <button
-            className={`filter-btn ${activeCategory === 'TODAS' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('TODAS')}
-          >
-            TODAS
-          </button>
           {categories.map(c => (
             <button
               key={c.id}
               className={`filter-btn ${activeCategory === c.name ? 'active' : ''}`}
               onClick={() => setActiveCategory(c.name)}
             >
-              {c.name}
+              {c.name.toUpperCase()}
             </button>
           ))}
         </div>
@@ -92,9 +86,9 @@ const Catalog = () => {
         <div className="catalog-grid">
           {filteredProducts.map((item) => (
             <div className="catalog-card" key={item.id}>
-              <div className="card-tag">{item.categoryName}</div>
+              <div className="card-tag">{item.category}</div>
               <div className="catalog-image">
-                <img src={item.mainImage} alt={item.name} />
+                <img src={item.image} alt={item.name} />
               </div>
               <div className="catalog-info">
                 <div>

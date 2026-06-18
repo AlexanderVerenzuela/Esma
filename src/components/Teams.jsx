@@ -1,5 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import useEmblaCarousel from 'embla-carousel-react';
 import { supabase } from '../supabaseClient';
 import './Teams.css';
 
@@ -11,8 +12,17 @@ const fallbackData = [
 ];
 
 const Teams = () => {
-  const scrollRef = useRef(null);
   const [teamsData, setTeamsData] = useState([]);
+  
+  // Initialize Embla Carousel
+  // loop: true -> Infinite carousel
+  // align: 'center' -> Active slide is centered, showing parts of previous/next
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    loop: true, 
+    align: 'center', 
+    skipSnaps: false,
+    dragFree: false
+  });
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -33,12 +43,13 @@ const Teams = () => {
     fetchTeams();
   }, []);
 
-  const scroll = (direction) => {
-    if (scrollRef.current) {
-      const scrollAmount = direction === 'left' ? -400 : 400;
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
 
   return (
     <section className="section teams-section" id="equipos">
@@ -50,26 +61,31 @@ const Teams = () => {
             <p>Algunos de los equipos que ya visten Esma Sportwear.</p>
           </div>
           <div className="teams-nav-buttons">
-            <button className="nav-btn" onClick={() => scroll('left')}>
+            <button className="nav-btn" onClick={scrollPrev}>
               <ArrowLeft size={20} strokeWidth={1} color="#fff" />
             </button>
-            <button className="nav-btn" onClick={() => scroll('right')}>
+            <button className="nav-btn" onClick={scrollNext}>
               <ArrowRight size={20} strokeWidth={1} color="#fff" />
             </button>
           </div>
         </div>
       </div>
 
-      <div className="teams-carousel-container">
-        <div className="teams-carousel" ref={scrollRef}>
+      <div className="embla" ref={emblaRef}>
+        <div className="embla__container">
           {teamsData.map((team, index) => (
-            <div className="team-card" key={index} style={{ backgroundImage: `url(${team.image})` }}>
-              <div className="team-card-overlay">
-                <div className="team-card-info">
-                  <span className="team-year">{team.year}</span>
-                  <h3>{team.name}</h3>
+            <div className="embla__slide" key={`${team.id || team.name}-${index}`}>
+              <div 
+                className="team-card" 
+                style={{ backgroundImage: `url(${team.image})` }}
+              >
+                <div className="team-card-overlay">
+                  <div className="team-card-info">
+                    <span className="team-year">{team.year}</span>
+                    <h3>{team.name}</h3>
+                  </div>
+                  <div className="team-esma-badge">ESMA</div>
                 </div>
-                <div className="team-esma-badge">ESMA</div>
               </div>
             </div>
           ))}

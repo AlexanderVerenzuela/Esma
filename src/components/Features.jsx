@@ -29,28 +29,36 @@ const Features = () => {
             
             <div className="features-grid">
               <div className="feature-item">
-                <Palette size={24} color="#CCFF00" />
+                <div className="feature-icon-wrapper">
+                  <Palette size={20} color="#CCFF00" />
+                </div>
                 <div>
                   <h3>COLORES</h3>
                   <p>A tu elección</p>
                 </div>
               </div>
               <div className="feature-item">
-                <ImageIcon size={24} color="#CCFF00" />
+                <div className="feature-icon-wrapper">
+                  <ImageIcon size={20} color="#CCFF00" />
+                </div>
                 <div>
                   <h3>LOGOS</h3>
                   <p>Bordado o estampado</p>
                 </div>
               </div>
               <div className="feature-item">
-                <Type size={24} color="#CCFF00" />
+                <div className="feature-icon-wrapper">
+                  <Type size={20} color="#CCFF00" />
+                </div>
                 <div>
                   <h3>NOMBRES</h3>
                   <p>Y números</p>
                 </div>
               </div>
               <div className="feature-item">
-                <ShieldCheck size={24} color="#CCFF00" />
+                <div className="feature-icon-wrapper">
+                  <ShieldCheck size={20} color="#CCFF00" />
+                </div>
                 <div>
                   <h3>PATROCINIOS</h3>
                   <p>Y publicidad</p>

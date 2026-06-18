@@ -6,6 +6,7 @@ import AdminDashboard from './admin/AdminDashboard';
 import ProductManager from './admin/ProductManager';
 import CategoryManager from './admin/CategoryManager';
 import TeamManager from './admin/TeamManager';
+import Settings from './admin/Settings';
 import './App.css';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="products" element={<ProductManager />} />
           <Route path="categories" element={<CategoryManager />} />
           <Route path="teams" element={<TeamManager />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
     </BrowserRouter>
