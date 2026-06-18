@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600&display=swap');
 
 :root {
-  --primary: #CCFF00; /* Lime Green */
+  --primary: #CCFF00;
+  /* Lime Green */
   --primary-hover: #A3CC00;
   --bg-dark: #0A0A0A;
   --bg-card: #111111;
@@ -9,7 +10,7 @@
   --text-main: #FFFFFF;
   --text-muted: #888888;
   --border-color: #222222;
-  
+
   --font-heading: 'Anton', sans-serif;
   --font-body: 'Inter', sans-serif;
   --transition: all 0.3s ease;
@@ -39,11 +40,15 @@ ul {
 }
 
 /* Typography */
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-family: var(--font-heading);
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  font-weight: 400; /* Anton is inherently bold */
+  font-weight: 400;
+  /* Anton is inherently bold */
   line-height: 1.1;
 }
 
@@ -94,9 +99,17 @@ p {
   }
 }
 
-.mb-2 { margin-bottom: 0.5rem; }
-.mb-4 { margin-bottom: 1.5rem; }
-.mt-4 { margin-top: 2rem; }
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+.mt-4 {
+  margin-top: 2rem;
+}
 
 /* Buttons */
 .btn {
