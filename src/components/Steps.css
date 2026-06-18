@@ -1,0 +1,109 @@
+.steps-section {
+  background-color: var(--bg-dark);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.steps-wrapper {
+  position: relative;
+  margin-top: 4rem;
+}
+
+.steps-line {
+  position: absolute;
+  top: 57px;
+  left: 5%;
+  right: 5%;
+  height: 1px;
+  background-color: rgba(204, 255, 0, 0.3);
+  z-index: 0;
+}
+
+.steps-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  position: relative;
+  z-index: 1;
+  gap: 1.5rem;
+}
+
+.step-box {
+  flex: 1;
+  background-color: var(--bg-card);
+  padding: 2rem 1.5rem;
+  border-radius: 16px;
+  text-align: left;
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+  position: relative;
+}
+
+.step-box:hover {
+  border-color: rgba(204, 255, 0, 0.5);
+  transform: translateY(-5px);
+}
+
+.step-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.step-icon {
+  width: 50px;
+  height: 50px;
+  background-color: var(--primary);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 30px rgba(204, 255, 0, 0.4);
+  position: relative;
+  z-index: 2;
+}
+
+.step-bg-num {
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  color: rgba(255,255,255,0.08);
+  line-height: 1;
+}
+
+.step-box h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+  font-family: var(--font-heading);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.step-box p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.step-arrow {
+  position: absolute;
+  top: 57px;
+  right: -0.75rem;
+  transform: translate(50%, -50%);
+  color: var(--primary);
+  font-weight: bold;
+  font-size: 1.2rem;
+  z-index: 2;
+  background-color: var(--bg-dark);
+  padding: 0 4px;
+}
+
+@media (max-width: 1024px) {
+  .steps-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .steps-line, .step-arrow {
+    display: none;
+  }
+}

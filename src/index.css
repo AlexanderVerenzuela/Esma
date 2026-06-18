@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600&display=swap');
+
+:root {
+  --primary: #CCFF00; /* Lime Green */
+  --primary-hover: #A3CC00;
+  --bg-dark: #0A0A0A;
+  --bg-card: #111111;
+  --bg-card-hover: #161616;
+  --text-main: #FFFFFF;
+  --text-muted: #888888;
+  --border-color: #222222;
+  
+  --font-heading: 'Anton', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+/* Typography */
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 400; /* Anton is inherently bold */
+  line-height: 1.1;
+}
+
+h1 {
+  font-size: clamp(3rem, 7vw, 6rem);
+}
+
+h2 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+}
+
+h3 {
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+}
+
+p {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.italic {
+  font-style: italic;
+}
+
+/* Utilities */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section {
+  padding: 6rem 0;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 2rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 50px;
+  transition: var(--transition);
+  cursor: pointer;
+  border: none;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  letter-spacing: 0.05em;
+}
+
+.btn-primary {
+  background-color: #fff;
+  color: #000;
+  border: 2px solid transparent;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 20px rgba(204, 255, 0, 0.4);
+  border-color: var(--primary);
+}
+
+.btn-solid-primary {
+  background-color: var(--primary);
+  color: #000;
+}
+
+.btn-solid-primary:hover {
+  box-shadow: 0 0 20px rgba(204, 255, 0, 0.5);
+  background-color: var(--primary-hover);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.btn-outline:hover {
+  background-color: rgba(204, 255, 0, 0.1);
+}
+
+/* Pill Tags */
+.pill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 1rem;
+  border-radius: 50px;
+  border: 1px solid rgba(204, 255, 0, 0.3);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.5rem;
+}
+
+.pill-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--primary);
+  border-radius: 50%;
+}

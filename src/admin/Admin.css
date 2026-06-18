@@ -1,0 +1,165 @@
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #050505;
+  color: #fff;
+  font-family: var(--font-body);
+}
+
+.admin-sidebar {
+  width: 250px;
+  background-color: #111;
+  border-right: 1px solid #222;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-brand {
+  padding: 2rem;
+  border-bottom: 1px solid #222;
+}
+
+.admin-brand h2 {
+  font-size: 1.5rem;
+  margin: 0;
+  color: var(--primary);
+}
+
+.admin-nav {
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.admin-nav a {
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #aaa;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.admin-nav a:hover, .admin-nav a.active {
+  background-color: rgba(204, 255, 0, 0.1);
+  color: var(--primary);
+  border-right: 3px solid var(--primary);
+}
+
+.admin-logout {
+  margin-top: auto;
+  border-top: 1px solid #222;
+}
+
+.admin-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-header {
+  padding: 1.5rem 2rem;
+  background-color: #111;
+  border-bottom: 1px solid #222;
+}
+
+.admin-header h3 {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.admin-content {
+  padding: 2rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Common Admin UI */
+.admin-card {
+  background-color: #111;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.admin-table th, .admin-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #222;
+}
+
+.admin-table th {
+  color: #888;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-family: var(--font-body);
+  letter-spacing: 0;
+}
+
+.admin-btn {
+  background-color: var(--primary);
+  color: #000;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-btn-danger {
+  background-color: #ff3333;
+  color: #fff;
+}
+
+.admin-btn-secondary {
+  background-color: #333;
+  color: #fff;
+}
+
+.admin-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.admin-form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.admin-input {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #0a0a0a;
+  border: 1px solid #333;
+  color: #fff;
+  border-radius: 4px;
+  font-family: inherit;
+}
+
+.admin-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

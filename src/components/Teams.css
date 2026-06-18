@@ -1,0 +1,153 @@
+.teams-section {
+  background-color: var(--bg-dark);
+  padding: 6rem 0;
+  overflow: hidden; /* Prevent horizontal scroll bar on body */
+}
+
+.teams-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 3rem;
+}
+
+.teams-header-text {
+  text-align: left;
+}
+
+.teams-header-text h2 {
+  margin: 0.5rem 0;
+}
+
+.teams-nav-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-btn {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-btn svg {
+  transition: stroke 0.3s ease;
+}
+
+.nav-btn:hover {
+  background-color: transparent;
+  border-color: var(--primary);
+  box-shadow: 0 0 25px rgba(204, 255, 0, 0.3);
+}
+
+.nav-btn:hover svg {
+  stroke: var(--primary) !important;
+}
+
+.teams-carousel-container {
+  padding-left: max(2rem, calc((100vw - 1200px) / 2));
+}
+
+.teams-carousel {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  padding-bottom: 2rem;
+  padding-right: 2rem; /* Add padding to the right so last item doesn't stick to edge */
+  scroll-behavior: smooth;
+}
+
+.teams-carousel::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.team-card {
+  min-width: 350px;
+  height: 500px;
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  transition: transform 0.3s ease;
+}
+
+.team-card:hover {
+  transform: translateY(-5px);
+}
+
+.team-card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 1.5rem;
+}
+
+.team-card-info {
+  text-align: left;
+}
+
+.team-year {
+  color: var(--primary);
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.team-card-info h3 {
+  color: #fff;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.team-esma-badge {
+  background-color: rgba(0,0,0,0.8);
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  padding: 0.3rem 1rem;
+  border-radius: 50px;
+  font-size: 0.7rem;
+  font-family: var(--font-heading);
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 1024px) {
+  .team-card {
+    min-width: 300px;
+    height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .teams-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  .teams-carousel-container {
+    padding-left: 1rem;
+  }
+  .teams-carousel {
+    padding-right: 1rem;
+  }
+}
