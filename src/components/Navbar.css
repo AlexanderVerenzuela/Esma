@@ -10,19 +10,14 @@
 }
 
 .nav-logo {
-  height: 65px;
+  height: 40px;
   display: block;
-  transition: var(--transition);
 }
 
 .navbar.scrolled {
   padding: 1rem 0;
   border-bottom: 1px solid var(--border-color);
   background-color: rgba(0, 0, 0, 0.95);
-}
-
-.navbar.scrolled .nav-logo {
-  height: 45px;
 }
 
 .nav-container {
@@ -79,7 +74,7 @@
   .mobile-toggle {
     display: block;
   }
-  
+
   .nav-links {
     position: fixed;
     top: 0;
@@ -91,7 +86,7 @@
     flex-direction: column;
     justify-content: center;
     transition: 0.3s ease-in-out;
-    box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
     padding: 2rem;
     z-index: 1000;
   }
@@ -104,13 +99,13 @@
     width: 100%;
     text-align: center;
   }
-  
+
   .nav-links a {
     display: block;
     padding: 1rem 0;
     font-size: 1.2rem;
   }
-  
+
   .nav-btn {
     display: inline-block;
     margin-top: 1rem;
