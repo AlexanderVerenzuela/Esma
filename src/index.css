@@ -31,9 +31,6 @@ body {
   background-color: var(--bg-dark);
   color: var(--text-main);
   line-height: 1.6;
-}
-
-#root {
   overflow-x: hidden;
 }
 

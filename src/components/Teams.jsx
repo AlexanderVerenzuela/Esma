@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { supabase } from '../supabaseClient';
+import EditableText from './editor/EditableText';
 import './Teams.css';
 
 const fallbackData = [
@@ -56,9 +57,9 @@ const Teams = () => {
       <div className="container">
         <div className="teams-header">
           <div className="teams-header-text">
-            <span className="subtitle">TRABAJOS</span>
-            <h2>EQUIPOS QUE CONFÍAN</h2>
-            <p>Algunos de los equipos que ya visten Esma Sportwear.</p>
+            <span className="subtitle"><EditableText id="teams_tag" defaultText="TRABAJOS" /></span>
+            <EditableText id="teams_title" defaultText="EQUIPOS QUE CONFÍAN" as="h2" />
+            <EditableText id="teams_desc" defaultText="Algunos de los equipos que ya visten Esma Sportwear." as="p" />
           </div>
           <div className="teams-nav-buttons">
             <button className="carousel-nav-btn" onClick={scrollPrev}>

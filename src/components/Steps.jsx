@@ -1,5 +1,6 @@
 import React from 'react';
 import { MessageSquare, PenTool, Shirt, Factory, Package } from 'lucide-react';
+import EditableText from './editor/EditableText';
 import './Steps.css';
 
 const stepsData = [
@@ -16,10 +17,19 @@ const Steps = () => {
       <div className="container">
         <div className="text-center mb-4">
           <div className="pill-tag" style={{margin: '0 auto 1.5rem'}}>
-            <span className="pill-dot"></span> PROCESO
+            <span className="pill-dot"></span> <EditableText id="steps_tag" defaultText="PROCESO" />
           </div>
-          <h2>CREA TU CAMISETA PERSONALIZADA <span className="text-primary">EN 5 PASOS</span></h2>
-          <p>Desde tu idea hasta la entrega final.</p>
+          <EditableText 
+            id="steps_title" 
+            defaultText='CREA TU CAMISETA PERSONALIZADA <span class="text-primary">EN 5 PASOS</span>' 
+            isHtml={true} 
+            as="h2" 
+          />
+          <EditableText 
+            id="steps_subtitle" 
+            defaultText="Desde tu idea hasta la entrega final." 
+            as="p" 
+          />
         </div>
         
         <div className="steps-wrapper">
@@ -31,8 +41,8 @@ const Steps = () => {
                   <div className="step-icon">{step.icon}</div>
                   <span className="step-bg-num">{step.num}</span>
                 </div>
-                <h3>{step.title}</h3>
-                <p>{step.desc}</p>
+                <EditableText id={`step_title_${index}`} defaultText={step.title} as="h3" />
+                <EditableText id={`step_desc_${index}`} defaultText={step.desc} as="p" />
                 {index < stepsData.length - 1 && (
                   <div className="step-arrow">&gt;</div>
                 )}

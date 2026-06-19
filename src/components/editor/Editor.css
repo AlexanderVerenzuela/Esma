@@ -1,0 +1,110 @@
+.editable-field {
+  transition: all 0.2s ease;
+  border: 2px dashed transparent;
+  border-radius: 4px;
+}
+
+.editable-field.active {
+  border-color: var(--primary);
+  background: rgba(0, 0, 0, 0.5);
+  padding: 0.5rem;
+  z-index: 50;
+}
+
+.editable-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.editable-field:hover .editable-overlay {
+  opacity: 1;
+}
+
+.editor-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  outline: none;
+  resize: vertical;
+}
+
+.editor-actions {
+  position: absolute;
+  top: -30px;
+  right: 0;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.editor-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #000;
+}
+
+.editor-btn.save {
+  background: var(--primary);
+}
+
+.editor-btn.cancel {
+  background: #ff4444;
+  color: #fff;
+}
+
+.editable-bg {
+  border: 3px dashed var(--primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.editable-bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 20;
+}
+
+.editable-bg:hover .editable-bg-overlay {
+  opacity: 1;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}

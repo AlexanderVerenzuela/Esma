@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ArrowRight, ListPlus } from 'lucide-react';
 import { supabase } from '../supabaseClient';
-import './Catalog.css';
-
 import { useNavigate } from 'react-router-dom';
+import EditableText from './editor/EditableText';
+import './Catalog.css';
 
 const Catalog = () => {
   const navigate = useNavigate();
@@ -78,11 +78,11 @@ const Catalog = () => {
       <div className="container">
         <div className="catalog-header">
           <div>
-            <span className="subtitle">COLECCIÓN</span>
-            <h2>NUESTROS DISEÑOS</h2>
+            <span className="subtitle"><EditableText id="catalog_tag" defaultText="COLECCIÓN" /></span>
+            <EditableText id="catalog_title" defaultText="NUESTROS DISEÑOS" as="h2" />
           </div>
           <div className="catalog-header-text">
-            <p>Cada modelo se personaliza con nombre, número y escudo a elección.</p>
+            <EditableText id="catalog_subtitle" defaultText="Cada modelo se personaliza con nombre, número y escudo a elección." as="p" />
           </div>
         </div>
 

@@ -4,7 +4,9 @@
   display: flex;
   align-items: center;
   position: relative;
-  background: url('/images/hero_background_1781810278116.png') center/cover no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   border-radius: 20px;
   margin: 0 auto 2rem auto;
   max-width: 96%;
