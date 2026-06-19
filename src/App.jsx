@@ -9,6 +9,7 @@ import CategoryManager from './admin/CategoryManager';
 import TeamManager from './admin/TeamManager';
 import ListManager from './admin/ListManager';
 import Settings from './admin/Settings';
+import QuoteGenerator from './admin/QuoteGenerator';
 import { SiteProvider } from './context/SiteContext';
 import './App.css';
 
@@ -26,6 +27,7 @@ function App() {
             <Route path="categories" element={<CategoryManager />} />
             <Route path="teams" element={<TeamManager />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="quotes" element={<QuoteGenerator />} />
           </Route>
         </Routes>
       </BrowserRouter>

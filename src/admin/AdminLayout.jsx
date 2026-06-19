@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, Tags, Users, LogOut, Settings, Menu, X, ClipboardList } from 'lucide-react';
+import { LayoutDashboard, Package, Tags, Users, LogOut, Settings, Menu, X, ClipboardList, FileText } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import Login from './Login';
 import './Admin.css';
@@ -70,6 +70,9 @@ const AdminLayout = () => {
           </Link>
           <Link to="/admin/teams" className={location.pathname === '/admin/teams' ? 'active' : ''} onClick={closeMenu}>
             <Users size={20} /> Equipos
+          </Link>
+          <Link to="/admin/quotes" className={location.pathname === '/admin/quotes' ? 'active' : ''} onClick={closeMenu}>
+            <FileText size={20} /> Cotizaciones
           </Link>
           <Link to="/admin/settings" className={location.pathname === '/admin/settings' ? 'active' : ''} onClick={closeMenu}>
             <Settings size={20} /> Configuración
