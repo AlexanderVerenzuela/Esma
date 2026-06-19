@@ -60,6 +60,16 @@ const Catalog = () => {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const currentProducts = filteredProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    const catalogSection = document.getElementById('catalogo');
+    if (catalogSection) {
+      // Offset by roughly navbar height (80px)
+      const y = catalogSection.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="section catalog-section" id="catalogo">
       <div className="container">
@@ -133,7 +143,7 @@ const Catalog = () => {
             <button 
               className="btn btn-outline" 
               disabled={currentPage === 1}
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
             >
               Anterior
             </button>
@@ -148,7 +158,7 @@ const Catalog = () => {
                     color: currentPage === i + 1 ? '#000' : 'var(--primary)',
                     fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
                   }}
-                  onClick={() => setCurrentPage(i + 1)}
+                  onClick={() => handlePageChange(i + 1)}
                 >
                   {i + 1}
                 </button>
@@ -157,7 +167,7 @@ const Catalog = () => {
             <button 
               className="btn btn-outline" 
               disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
             >
               Siguiente
             </button>
