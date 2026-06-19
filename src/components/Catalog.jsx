@@ -60,18 +60,6 @@ const Catalog = () => {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const currentProducts = filteredProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-    setTimeout(() => {
-      const catalogSection = document.getElementById('catalogo');
-      if (catalogSection) {
-        // Offset by roughly navbar height (80px)
-        const y = catalogSection.getBoundingClientRect().top + window.scrollY - 80;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }
-    }, 100);
-  };
-
   return (
     <section className="section catalog-section" id="catalogo">
       <div className="container">
@@ -142,37 +130,41 @@ const Catalog = () => {
 
         {totalPages > 1 && (
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '3rem' }}>
-            <button 
+            <a 
+              href="#catalogo"
               className="btn btn-outline" 
-              disabled={currentPage === 1}
-              onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+              style={currentPage === 1 ? { pointerEvents: 'none', opacity: 0.5 } : {}}
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             >
               Anterior
-            </button>
+            </a>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               {[...Array(totalPages)].map((_, i) => (
-                <button
+                <a
                   key={i}
+                  href="#catalogo"
                   style={{
                     width: '40px', height: '40px', borderRadius: '50%',
                     border: '1px solid var(--primary)',
                     backgroundColor: currentPage === i + 1 ? 'var(--primary)' : 'transparent',
                     color: currentPage === i + 1 ? '#000' : 'var(--primary)',
-                    fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                    fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    textDecoration: 'none'
                   }}
-                  onClick={() => handlePageChange(i + 1)}
+                  onClick={() => setCurrentPage(i + 1)}
                 >
                   {i + 1}
-                </button>
+                </a>
               ))}
             </div>
-            <button 
+            <a 
+              href="#catalogo"
               className="btn btn-outline" 
-              disabled={currentPage === totalPages}
-              onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
+              style={currentPage === totalPages ? { pointerEvents: 'none', opacity: 0.5 } : {}}
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             >
               Siguiente
-            </button>
+            </a>
           </div>
         )}
       </div>
