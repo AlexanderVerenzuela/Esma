@@ -71,6 +71,12 @@ const ListGenerator = () => {
       if (error) throw error;
       
       setSuccess(true);
+      
+      // Open WhatsApp in a new tab
+      const message = `Hola ESMA Sportwear, acabo de enviar la lista de jugadores para mi equipo: *${teamName}*.`;
+      const whatsappUrl = `https://wa.me/573136274482?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+      
     } catch (err) {
       console.error(err);
       alert('Hubo un error al enviar la lista. Por favor intenta nuevamente.');
