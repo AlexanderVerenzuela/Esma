@@ -28,7 +28,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 60px;
-  border-bottom: 6px solid #d4d95e;
+  border-bottom: 6px solid #CCFF00;
 }
 
 .quote-header-box img {
@@ -36,7 +36,7 @@
 }
 
 .quote-header-title {
-  color: #d4d95e;
+  color: #CCFF00;
   font-size: 32px;
   font-weight: 800;
   letter-spacing: 2px;
@@ -53,7 +53,7 @@
 .quote-client-card {
   background: #f8f9fa;
   padding: 20px;
-  border-left: 4px solid #d4d95e;
+  border-left: 4px solid #CCFF00;
   border-radius: 4px;
   width: 48%;
 }
@@ -188,7 +188,7 @@
 .quote-total-label {
   font-size: 13px;
   font-weight: 600;
-  color: #d4d95e;
+  color: #CCFF00;
   letter-spacing: 1px;
   white-space: nowrap;
 }
