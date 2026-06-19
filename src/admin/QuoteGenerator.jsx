@@ -222,16 +222,19 @@ const QuoteGenerator = () => {
       </div>
 
       {/* Right Column: Preview */}
-      <div style={{ flex: '1', display: 'flex', justifyContent: 'center', background: '#e0e0e0', padding: '2rem', borderRadius: '12px', overflowX: 'auto' }}>
-        <div style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.2)', transform: 'scale(0.8)', transformOrigin: 'top center' }}>
-          <QuoteTemplate 
-            ref={quoteRef}
-            data={{
-              ...formData,
-              items,
-              total: calculateGrandTotal()
-            }} 
-          />
+      <div style={{ flex: '1', display: 'flex', justifyContent: 'center', background: '#111', padding: '2rem', borderRadius: '12px', overflow: 'hidden' }}>
+        {/* Wrapper to reserve exact scaled dimensions so it doesn't cause scrollbars */}
+        <div style={{ width: '555px', height: '786px', borderRadius: '8px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', background: '#fff', overflow: 'hidden' }}>
+          <div style={{ transform: 'scale(0.7)', transformOrigin: 'top left', width: '794px', height: '1123px' }}>
+            <QuoteTemplate 
+              ref={quoteRef}
+              data={{
+                ...formData,
+                items,
+                total: calculateGrandTotal()
+              }} 
+            />
+          </div>
         </div>
       </div>
     </div>
