@@ -53,8 +53,9 @@ const EditableImage = ({ id, defaultSrc, className = '', style = {}, isBackgroun
         onClick={handleClick}
       >
         {isEditMode && (
-          <div className="editable-bg-overlay">
-            {isUploading ? <Loader className="spin" size={32} color="#FFF" /> : <ImageIcon size={32} color="#FFF" />}
+          <div className="editable-bg-btn" title="Cambiar imagen de fondo">
+            {isUploading ? <Loader className="spin" size={20} color="#FFF" /> : <ImageIcon size={20} color="#FFF" />}
+            <span style={{marginLeft: '8px', fontSize: '12px', fontWeight: 'bold'}}>FONDO</span>
           </div>
         )}
         <input 

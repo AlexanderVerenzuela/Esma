@@ -96,7 +96,26 @@
   pointer-events: none;
 }
 
-.editable-bg:hover .editable-bg-overlay {
+.editable-bg-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid var(--primary);
+  border-radius: 8px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 20;
+  color: #fff;
+  cursor: pointer;
+}
+
+.editable-bg:hover .editable-bg-overlay,
+.editable-bg:hover .editable-bg-btn {
   opacity: 1;
 }
 
