@@ -62,7 +62,15 @@ const EditableText = ({ id, defaultText, isHtml = false, as: Component = 'span',
   }
 
   return (
-    <div className={`editable-field ${className}`} style={{ ...style, position: 'relative', display: 'inline-block' }} onClick={() => setIsEditing(true)}>
+    <div 
+      className={`editable-field ${className}`} 
+      style={{ ...style, position: 'relative', display: 'inline-block', zIndex: 30 }} 
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setIsEditing(true);
+      }}
+    >
       <div className="editable-overlay">
         <Edit2 size={24} color="#FFF" />
       </div>
