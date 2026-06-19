@@ -62,12 +62,14 @@ const Catalog = () => {
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
-    const catalogSection = document.getElementById('catalogo');
-    if (catalogSection) {
-      // Offset by roughly navbar height (80px)
-      const y = catalogSection.getBoundingClientRect().top + window.scrollY - 80;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    }
+    setTimeout(() => {
+      const catalogSection = document.getElementById('catalogo');
+      if (catalogSection) {
+        // Offset by roughly navbar height (80px)
+        const y = catalogSection.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }, 100);
   };
 
   return (
