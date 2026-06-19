@@ -74,7 +74,14 @@ const ListGenerator = () => {
       
       // Open WhatsApp in a new tab
       const message = `Hola ESMA Sportwear, acabo de enviar la lista de jugadores para mi equipo: *${teamName}*.`;
-      const whatsappUrl = `https://wa.me/51925916112?text=${encodeURIComponent(message)}`;
+      const encodedMsg = encodeURIComponent(message);
+      
+      // Detect mobile to use standard wa.me link, otherwise force WhatsApp Web
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const whatsappUrl = isMobile 
+        ? `https://wa.me/51925916112?text=${encodedMsg}`
+        : `https://web.whatsapp.com/send?phone=51925916112&text=${encodedMsg}`;
+        
       window.open(whatsappUrl, '_blank');
       
     } catch (err) {
