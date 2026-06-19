@@ -12,9 +12,16 @@ const Catalog = () => {
   const [activeCategory, setActiveCategory] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
 
+  const ITEMS_PER_PAGE = 9;
+  const [currentPage, setCurrentPage] = useState(1);
+
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, activeCategory]);
 
   const fetchData = async () => {
     try {
@@ -48,6 +55,10 @@ const Catalog = () => {
     const matchesCat = activeCategory === 'Todos' || p.category === activeCategory;
     return matchesSearch && matchesCat;
   });
+
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const currentProducts = filteredProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   return (
     <section className="section catalog-section" id="catalogo">
@@ -87,7 +98,7 @@ const Catalog = () => {
         </div>
 
         <div className="catalog-grid">
-          {filteredProducts.map((item) => (
+          {currentProducts.map((item) => (
             <div className="catalog-card" key={item.id}>
               <div className="card-tag">{item.category}</div>
               <div className="catalog-image">
@@ -116,6 +127,42 @@ const Catalog = () => {
             </div>
           )}
         </div>
+
+        {totalPages > 1 && (
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '3rem' }}>
+            <button 
+              className="btn btn-outline" 
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            >
+              Anterior
+            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  style={{
+                    width: '40px', height: '40px', borderRadius: '50%',
+                    border: '1px solid var(--primary)',
+                    backgroundColor: currentPage === i + 1 ? 'var(--primary)' : 'transparent',
+                    color: currentPage === i + 1 ? '#000' : 'var(--primary)',
+                    fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                  }}
+                  onClick={() => setCurrentPage(i + 1)}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+            <button 
+              className="btn btn-outline" 
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            >
+              Siguiente
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
