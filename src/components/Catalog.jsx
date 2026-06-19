@@ -61,16 +61,16 @@ const Catalog = () => {
   const currentProducts = filteredProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
+    const catalogSection = document.getElementById('catalogo');
+    if (catalogSection) {
+      const y = catalogSection.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
     
-    // Allow React to re-render the DOM first
+    // Allow the smooth scroll to start before snapping the layout height
     setTimeout(() => {
-      const catalogSection = document.getElementById('catalogo');
-      if (catalogSection) {
-        const y = catalogSection.getBoundingClientRect().top + window.scrollY - 80;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }
-    }, 100);
+      setCurrentPage(newPage);
+    }, 400);
   };
 
   return (
