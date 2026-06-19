@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { Download, Eye, X } from 'lucide-react';
+import * as XLSX from 'xlsx';
 import './Admin.css';
 
 const ListManager = () => {
@@ -45,26 +46,28 @@ const ListManager = () => {
     }
   };
 
-  const downloadCSV = (list) => {
-    const headers = ['Talla', 'Nombre en Camiseta', 'Numero', 'Pantaloneta'];
-    const rows = list.players_data.map(p => [
-      p.talla || '', 
-      p.nombre || '', 
-      p.numero || '', 
-      p.pantaloneta || ''
-    ]);
+  const downloadExcel = (list) => {
+    const data = list.players_data.map((p, index) => ({
+      'Nº': index + 1,
+      'Talla': p.talla || '',
+      'Nombre en Camiseta': p.nombre || '',
+      'Número': p.numero || '',
+      'Short': p.pantaloneta || ''
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Jugadores");
     
-    const csvContent = "data:text/csv;charset=utf-8,\uFEFF" 
-      + headers.join(",") + "\n" 
-      + rows.map(e => e.map(item => `"${item}"`).join(",")).join("\n");
-      
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `${list.team_name.replace(/\s+/g, '_')}_lista.csv`);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+    worksheet['!cols'] = [
+      { wch: 5 },
+      { wch: 10 },
+      { wch: 30 },
+      { wch: 10 },
+      { wch: 10 }
+    ];
+
+    XLSX.writeFile(workbook, `${list.team_name.replace(/\s+/g, '_')}_lista.xlsx`);
   };
 
   if (loading) return <div className="admin-page"><p>Cargando listas...</p></div>;
@@ -104,8 +107,8 @@ const ListManager = () => {
                   <button className="admin-btn" style={{ marginRight: '0.5rem' }} onClick={() => setSelectedList(list)}>
                     <Eye size={16} /> Ver
                   </button>
-                  <button className="admin-btn" style={{ marginRight: '0.5rem', backgroundColor: 'var(--primary)', color: '#000' }} onClick={() => downloadCSV(list)}>
-                    <Download size={16} /> CSV
+                  <button className="admin-btn" style={{ marginRight: '0.5rem', backgroundColor: '#107c41', color: '#fff', borderColor: '#107c41' }} onClick={() => downloadExcel(list)}>
+                    <Download size={16} /> Excel
                   </button>
                   <button className="admin-btn-danger" onClick={() => deleteList(list.id)}>
                     Eliminar
@@ -146,7 +149,7 @@ const ListManager = () => {
                     <th>Talla</th>
                     <th>Nombre</th>
                     <th>Número</th>
-                    <th>Pantaloneta</th>
+                    <th>Short</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -164,8 +167,8 @@ const ListManager = () => {
             </div>
 
             <div style={{ padding: '1.5rem', borderTop: '1px solid #333', display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
-              <button className="admin-btn" style={{ backgroundColor: 'var(--primary)', color: '#000' }} onClick={() => downloadCSV(selectedList)}>
-                <Download size={18} /> Descargar CSV
+              <button className="admin-btn" style={{ backgroundColor: '#107c41', color: '#fff', borderColor: '#107c41' }} onClick={() => downloadExcel(selectedList)}>
+                <Download size={18} /> Descargar Excel
               </button>
               <button className="admin-btn" onClick={() => setSelectedList(null)}>Cerrar</button>
             </div>
