@@ -80,7 +80,7 @@ const ListGenerator = () => {
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       const whatsappUrl = isMobile 
         ? `https://wa.me/51925916112?text=${encodedMsg}`
-        : `https://web.whatsapp.com/send?phone=51925916112&text=${encodedMsg}`;
+        : `https://web.whatsapp.com/send/?phone=51925916112&text=${encodedMsg}`;
         
       window.open(whatsappUrl, '_blank');
       
