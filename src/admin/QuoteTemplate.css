@@ -171,7 +171,7 @@
 }
 
 .quote-totals-col {
-  width: 40%;
+  width: 45%;
 }
 
 .quote-total-row {
@@ -179,21 +179,22 @@
   color: #fff;
   display: flex;
   justify-content: space-between;
-  padding: 20px 25px;
+  padding: 16px 20px;
   border-radius: 8px;
   align-items: center;
   box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
 .quote-total-label {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: #d4d95e;
   letter-spacing: 1px;
+  white-space: nowrap;
 }
 
 .quote-total-amount {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 800;
 }
 
