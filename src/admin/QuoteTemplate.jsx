@@ -85,18 +85,10 @@ const QuoteTemplate = forwardRef(({ data }, ref) => {
         </div>
       </div>
 
-      <div className="quote-footer">
-        <div className="quote-signature-box">
-          <div className="quote-signature-line">{signatureName || 'Samuel Verenzuela'}</div>
-        </div>
-        
+      <div className="quote-footer" style={{ justifyContent: 'center' }}>
         <div className="quote-contact-info">
           <div>esmasportwear@gmail.com</div>
           <div>982-598-322</div>
-        </div>
-
-        <div className="quote-signature-box">
-          <div className="quote-signature-line">Cliente</div>
         </div>
       </div>
 
