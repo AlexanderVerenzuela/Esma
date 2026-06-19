@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import './Navbar.css';
 
@@ -21,9 +22,9 @@ const Navbar = () => {
   return (
     <nav className={`navbar ${scrolled ? 'scrolled glass' : ''}`}>
       <div className="container nav-container">
-        <a href="#" className="brand">
+        <Link to="/" className="brand">
           <img src="/images/logo.png" alt="ESMA Sportwear" className="nav-logo" />
-        </a>
+        </Link>
         
         {/* Mobile Toggle */}
         <div className="mobile-toggle" onClick={toggleMenu}>
