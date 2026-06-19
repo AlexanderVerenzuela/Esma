@@ -9,10 +9,10 @@ const ListGenerator = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
-  
+
   const [clientName, setClientName] = useState('');
   const [teamName, setTeamName] = useState('');
-  
+
   const [players, setPlayers] = useState([
     { id: Date.now(), talla: 'M', nombre: '', numero: '', pantaloneta: 'Sí' }
   ]);
@@ -48,7 +48,7 @@ const ListGenerator = () => {
       alert('Por favor completa tu nombre y el nombre del equipo.');
       return;
     }
-    
+
     // Check if at least one player has a name or number
     const validPlayers = players.filter(p => p.nombre.trim() !== '' || p.numero.trim() !== '');
     if (validPlayers.length === 0) {
@@ -69,14 +69,8 @@ const ListGenerator = () => {
       }]);
 
       if (error) throw error;
-      
+
       setSuccess(true);
-      
-      // Open WhatsApp in a new tab
-      const message = `Hola ESMA Sportwear, acabo de enviar la lista de jugadores para mi equipo: *${teamName}*.`;
-      const whatsappUrl = `https://wa.me/573136274482?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
-      
     } catch (err) {
       console.error(err);
       alert('Hubo un error al enviar la lista. Por favor intenta nuevamente.');
@@ -93,7 +87,7 @@ const ListGenerator = () => {
           <div className="generator-card" style={{ textAlign: 'center', maxWidth: '500px' }}>
             <h2 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>¡Lista Enviada con Éxito!</h2>
             <p style={{ marginBottom: '2rem', color: '#888' }}>
-              Hemos recibido la lista de jugadores para el equipo <strong>{teamName}</strong>. 
+              Hemos recibido la lista de jugadores para el equipo <strong>{teamName}</strong>.
               Nos pondremos en contacto contigo muy pronto.
             </p>
             <button className="btn btn-solid-primary" onClick={() => navigate('/')}>
@@ -125,20 +119,20 @@ const ListGenerator = () => {
             <div className="generator-form-grid">
               <div className="form-group">
                 <label>Tu Nombre / Contacto</label>
-                <input 
-                  type="text" 
-                  placeholder="Ej. Juan Pérez" 
-                  value={clientName} 
-                  onChange={e => setClientName(e.target.value)} 
+                <input
+                  type="text"
+                  placeholder="Ej. Juan Pérez"
+                  value={clientName}
+                  onChange={e => setClientName(e.target.value)}
                 />
               </div>
               <div className="form-group">
                 <label>Nombre del Equipo</label>
-                <input 
-                  type="text" 
-                  placeholder="Ej. Los Halcones FC" 
-                  value={teamName} 
-                  onChange={e => setTeamName(e.target.value)} 
+                <input
+                  type="text"
+                  placeholder="Ej. Los Halcones FC"
+                  value={teamName}
+                  onChange={e => setTeamName(e.target.value)}
                 />
               </div>
             </div>
@@ -146,7 +140,7 @@ const ListGenerator = () => {
 
           <div className="generator-card">
             <h3 style={{ marginBottom: '1.5rem', fontSize: '1.2rem', color: 'var(--primary)' }}>Jugadores</h3>
-            
+
             <div className="table-toolbar">
               <button className="btn btn-solid-primary" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }} onClick={addRow}>
                 <Plus size={18} /> Agregar Fila
@@ -182,18 +176,18 @@ const ListGenerator = () => {
                         </select>
                       </td>
                       <td>
-                        <input 
-                          type="text" 
-                          placeholder="Nombre" 
-                          value={player.nombre} 
+                        <input
+                          type="text"
+                          placeholder="Nombre"
+                          value={player.nombre}
                           onChange={(e) => updatePlayer(player.id, 'nombre', e.target.value)}
                         />
                       </td>
                       <td>
-                        <input 
-                          type="text" 
-                          placeholder="Ej. 10" 
-                          value={player.numero} 
+                        <input
+                          type="text"
+                          placeholder="Ej. 10"
+                          value={player.numero}
                           onChange={(e) => updatePlayer(player.id, 'numero', e.target.value)}
                         />
                       </td>
@@ -205,7 +199,7 @@ const ListGenerator = () => {
                       </td>
                       <td>
                         <button className="btn-remove-row" onClick={() => removeRow(player.id)}>
-                          <Trash2 size={18} /> <span style={{fontSize:'0.8rem'}}>Quitar</span>
+                          <Trash2 size={18} /> <span style={{ fontSize: '0.8rem' }}>Quitar</span>
                         </button>
                       </td>
                     </tr>
@@ -215,8 +209,8 @@ const ListGenerator = () => {
             </div>
 
             <div className="submit-section">
-              <button 
-                className="btn btn-solid-primary" 
+              <button
+                className="btn btn-solid-primary"
                 style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', fontSize: '1.1rem', padding: '1rem 2rem' }}
                 onClick={handleSubmit}
                 disabled={loading}
