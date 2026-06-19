@@ -125,29 +125,30 @@ const QuoteGenerator = () => {
         </div>
 
         {items.map((item, index) => (
-          <div key={item.id} style={{ background: '#f5f5f5', padding: '1rem', borderRadius: '8px', marginBottom: '1rem', position: 'relative' }}>
+          <div key={item.id} style={{ background: '#1a1a1a', border: '1px solid #333', padding: '1.5rem', borderRadius: '8px', marginBottom: '1rem', position: 'relative' }}>
             <button 
               onClick={() => removeItem(item.id)}
-              style={{ position: 'absolute', top: '5px', right: '5px', background: 'none', border: 'none', color: '#ff4444', cursor: 'pointer' }}
+              style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(255, 68, 68, 0.1)', border: 'none', color: '#ff4444', cursor: 'pointer', padding: '5px', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              title="Eliminar producto"
             >
               <Trash2 size={16} />
             </button>
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '0.5rem' }}>
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', marginTop: '10px' }}>
               <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                 <input 
                   type="text" 
-                  placeholder="Línea 1 (Ej: CONJUNTOS TALLA 8)" 
+                  placeholder="Descripción Principal (Ej: CONJUNTOS TALLA 8)" 
                   className="admin-input" 
                   value={item.desc1} 
                   onChange={(e) => handleItemChange(item.id, 'desc1', e.target.value)} 
                 />
               </div>
             </div>
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '0.5rem' }}>
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
               <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                 <input 
                   type="text" 
-                  placeholder="Línea 2 (Opcional)" 
+                  placeholder="Detalles Adicionales (Opcional)" 
                   className="admin-input" 
                   value={item.desc2} 
                   onChange={(e) => handleItemChange(item.id, 'desc2', e.target.value)} 
@@ -155,8 +156,8 @@ const QuoteGenerator = () => {
               </div>
             </div>
             <div style={{ display: 'flex', gap: '1rem' }}>
-              <div className="form-group" style={{ width: '80px', marginBottom: 0 }}>
-                <label style={{ fontSize: '11px' }}>Precio (S/.)</label>
+              <div className="form-group" style={{ width: '100px', marginBottom: 0 }}>
+                <label style={{ fontSize: '11px', color: '#888' }}>Precio (S/.)</label>
                 <input 
                   type="number" 
                   className="admin-input" 
@@ -164,8 +165,8 @@ const QuoteGenerator = () => {
                   onChange={(e) => handleItemChange(item.id, 'price', e.target.value)} 
                 />
               </div>
-              <div className="form-group" style={{ width: '80px', marginBottom: 0 }}>
-                <label style={{ fontSize: '11px' }}>Cantidad</label>
+              <div className="form-group" style={{ width: '100px', marginBottom: 0 }}>
+                <label style={{ fontSize: '11px', color: '#888' }}>Cantidad</label>
                 <input 
                   type="number" 
                   className="admin-input" 
@@ -173,14 +174,14 @@ const QuoteGenerator = () => {
                   onChange={(e) => handleItemChange(item.id, 'quantity', e.target.value)} 
                 />
               </div>
-              <div className="form-group" style={{ width: '80px', marginBottom: 0 }}>
-                <label style={{ fontSize: '11px' }}>Total</label>
+              <div className="form-group" style={{ width: '120px', marginBottom: 0 }}>
+                <label style={{ fontSize: '11px', color: '#888' }}>Total (S/.)</label>
                 <input 
                   type="text" 
                   className="admin-input" 
                   value={item.total} 
                   disabled 
-                  style={{ background: '#e9e9e9' }}
+                  style={{ background: '#0a0a0a', color: '#fff', borderColor: '#222' }}
                 />
               </div>
             </div>
