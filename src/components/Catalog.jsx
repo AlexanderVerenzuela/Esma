@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ArrowRight } from 'lucide-react';
+import { Search, ArrowRight, ListPlus } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import './Catalog.css';
 
+import { useNavigate } from 'react-router-dom';
+
 const Catalog = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([{ id: 'todos', name: 'Todos' }]);
   const [activeCategory, setActiveCategory] = useState('Todos');
@@ -90,14 +93,20 @@ const Catalog = () => {
               <div className="catalog-image">
                 <img src={item.image} alt={item.name} />
               </div>
-              <div className="catalog-info">
-                <div>
-                  <span className="design-id">DISEÑO #{item.code}</span>
-                  <h3>{item.name}</h3>
+              <div className="catalog-info" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <span className="design-id">DISEÑO #{item.code}</span>
+                    <h3>{item.name}</h3>
+                  </div>
                 </div>
-                <div className="arrow-btn">
-                  <ArrowRight size={20} color="#000" />
-                </div>
+                <button 
+                  className="btn btn-outline" 
+                  style={{ width: '100%', display: 'flex', justifyContent: 'center', gap: '0.5rem', alignItems: 'center' }}
+                  onClick={() => navigate(`/armar-lista/${item.id}`)}
+                >
+                  <ListPlus size={18} /> Armar Lista
+                </button>
               </div>
             </div>
           ))}
