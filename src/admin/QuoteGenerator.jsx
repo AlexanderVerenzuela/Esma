@@ -54,26 +54,45 @@ const QuoteGenerator = () => {
 
   const downloadAsImage = async () => {
     if (!quoteRef.current) return;
-    const canvas = await html2canvas(quoteRef.current, { scale: 2 });
-    const image = canvas.toDataURL("image/png");
-    const link = document.createElement('a');
-    link.href = image;
-    link.download = `Cotizacion_${formData.clientName || 'Esma'}.png`;
-    link.click();
+    
+    // Temporarily remove the scale transform from the parent to prevent html2canvas text squishing bug
+    const wrapper = quoteRef.current.parentElement;
+    const originalTransform = wrapper.style.transform;
+    wrapper.style.transform = 'none';
+    
+    try {
+      const canvas = await html2canvas(quoteRef.current, { scale: 2, useCORS: true });
+      const image = canvas.toDataURL("image/png");
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = `Cotizacion_${formData.clientName || 'Esma'}.png`;
+      link.click();
+    } finally {
+      wrapper.style.transform = originalTransform;
+    }
   };
 
   const downloadAsPDF = async () => {
     if (!quoteRef.current) return;
-    const canvas = await html2canvas(quoteRef.current, { scale: 2 });
-    const image = canvas.toDataURL("image/png");
     
-    // A4 dimensions in mm: 210 x 297
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-    
-    pdf.addImage(image, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`Cotizacion_${formData.clientName || 'Esma'}.pdf`);
+    const wrapper = quoteRef.current.parentElement;
+    const originalTransform = wrapper.style.transform;
+    wrapper.style.transform = 'none';
+
+    try {
+      const canvas = await html2canvas(quoteRef.current, { scale: 2, useCORS: true });
+      const image = canvas.toDataURL("image/png");
+      
+      // A4 dimensions in mm: 210 x 297
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      pdf.addImage(image, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`Cotizacion_${formData.clientName || 'Esma'}.pdf`);
+    } finally {
+      wrapper.style.transform = originalTransform;
+    }
   };
 
   return (
