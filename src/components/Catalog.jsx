@@ -3,7 +3,7 @@ import { Search, ArrowRight, ListPlus, X } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import EditableText from './editor/EditableText';
-import { X } from 'lucide-react';
+
 import './Catalog.css';
 
 const Catalog = () => {
