@@ -3,6 +3,8 @@ import { Search, ArrowRight, ListPlus } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import EditableText from './editor/EditableText';
+import Zoom from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
 import './Catalog.css';
 
 const Catalog = () => {
@@ -114,8 +116,10 @@ const Catalog = () => {
           {currentProducts.map((item) => (
             <div className="catalog-card" key={item.id}>
               <div className="card-tag">{item.category}</div>
-              <div className="catalog-image">
-                <img src={item.image} alt={item.name} />
+              <div className="catalog-image" style={{ cursor: 'zoom-in' }}>
+                <Zoom>
+                  <img src={item.image} alt={item.name} />
+                </Zoom>
               </div>
               <div className="catalog-info" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '1rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
