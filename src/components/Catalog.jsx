@@ -3,11 +3,7 @@ import { Search, ArrowRight, ListPlus, X } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import EditableText from './editor/EditableText';
-import Lightbox from "yet-another-react-lightbox";
-import Zoom from "yet-another-react-lightbox/plugins/zoom";
-import Captions from "yet-another-react-lightbox/plugins/captions";
-import "yet-another-react-lightbox/styles.css";
-import "yet-another-react-lightbox/plugins/captions.css";
+import { X } from 'lucide-react';
 import './Catalog.css';
 
 const Catalog = () => {
@@ -17,6 +13,32 @@ const Catalog = () => {
   const [activeCategory, setActiveCategory] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedImage, setSelectedImage] = useState(null); // Custom Modal State
+  const [zoomStyle, setZoomStyle] = useState({ transform: 'scale(1)', cursor: 'zoom-in', transformOrigin: 'center center' });
+
+  const handleCloseModal = () => {
+    setSelectedImage(null);
+    setZoomStyle({ transform: 'scale(1)', cursor: 'zoom-in', transformOrigin: 'center center' });
+  };
+
+  const handleToggleZoom = (e) => {
+    if (zoomStyle.transform.includes('scale(1)')) {
+      const { left, top, width, height } = e.target.getBoundingClientRect();
+      const x = ((e.clientX - left) / width) * 100;
+      const y = ((e.clientY - top) / height) * 100;
+      setZoomStyle({ transform: 'scale(2.5)', cursor: 'zoom-out', transformOrigin: `${x}% ${y}%` });
+    } else {
+      setZoomStyle({ transform: 'scale(1)', cursor: 'zoom-in', transformOrigin: 'center center' });
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (zoomStyle.transform.includes('scale(2.5)')) {
+      const { left, top, width, height } = e.target.getBoundingClientRect();
+      const x = ((e.clientX - left) / width) * 100;
+      const y = ((e.clientY - top) / height) * 100;
+      setZoomStyle(prev => ({ ...prev, transformOrigin: `${x}% ${y}%` }));
+    }
+  };
 
   const ITEMS_PER_PAGE = 9;
   const [currentPage, setCurrentPage] = useState(1);
@@ -189,19 +211,32 @@ const Catalog = () => {
         </div>
       </section>
 
-      <Lightbox
-        open={!!selectedImage}
-        close={() => setSelectedImage(null)}
-        slides={selectedImage ? [{ 
-          src: selectedImage.image, 
-          title: selectedImage.name, 
-          description: `DISEÑO #${selectedImage.code}` 
-        }] : []}
-        plugins={[Zoom, Captions]}
-        carousel={{ finite: true }}
-        render={{ buttonPrev: () => null, buttonNext: () => null }}
-        styles={{ container: { backgroundColor: "rgba(0, 0, 0, 0.95)" } }}
-      />
+      {/* Custom Aesthetic Modal */}
+      {selectedImage && (
+        <div className="image-modal-overlay" onClick={handleCloseModal}>
+          <button className="image-modal-close" onClick={handleCloseModal}>
+            <X size={32} />
+          </button>
+          <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
+            <img 
+              src={selectedImage.image} 
+              alt={selectedImage.name} 
+              style={{ ...zoomStyle, transition: zoomStyle.transform.includes('scale(1)') ? 'transform 0.3s ease' : 'none' }}
+              onClick={handleToggleZoom}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={() => {
+                if (zoomStyle.transform.includes('scale(2.5)')) {
+                   setZoomStyle(prev => ({ ...prev, transformOrigin: 'center center' }))
+                }
+              }}
+            />
+            <div className="image-modal-info">
+              <h4>{selectedImage.name}</h4>
+              <span>DISEÑO #{selectedImage.code}</span>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
