@@ -143,7 +143,7 @@ const QuoteGenerator = () => {
           </button>
         </div>
 
-        {items.map((item, index) => (
+        {[...items].reverse().map((item, index) => (
           <div key={item.id} style={{ background: '#1a1a1a', border: '1px solid #333', padding: '1.5rem', borderRadius: '8px', marginBottom: '1rem', position: 'relative' }}>
             <button 
               onClick={() => removeItem(item.id)}
