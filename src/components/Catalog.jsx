@@ -3,6 +3,7 @@ import { Search, ArrowRight, ListPlus, X } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import EditableText from './editor/EditableText';
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import './Catalog.css';
 
 const Catalog = () => {
@@ -191,7 +192,22 @@ const Catalog = () => {
             <X size={32} />
           </button>
           <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
-            <img src={selectedImage.image} alt={selectedImage.name} />
+            <div style={{ cursor: 'grab', display: 'flex', justifyContent: 'center' }}>
+              <TransformWrapper
+                initialScale={1}
+                minScale={1}
+                maxScale={4}
+                centerZoomedOut={true}
+              >
+                {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
+                  <React.Fragment>
+                    <TransformComponent>
+                      <img src={selectedImage.image} alt={selectedImage.name} />
+                    </TransformComponent>
+                  </React.Fragment>
+                )}
+              </TransformWrapper>
+            </div>
             <div className="image-modal-info">
               <h4>{selectedImage.name}</h4>
               <span>DISEÑO #{selectedImage.code}</span>
