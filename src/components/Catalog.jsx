@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ArrowRight, ListPlus } from 'lucide-react';
+import { Search, ArrowRight, ListPlus, X } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import EditableText from './editor/EditableText';
-import Zoom from 'react-medium-image-zoom';
-import 'react-medium-image-zoom/dist/styles.css';
 import './Catalog.css';
 
 const Catalog = () => {
@@ -13,6 +11,7 @@ const Catalog = () => {
   const [categories, setCategories] = useState([{ id: 'todos', name: 'Todos' }]);
   const [activeCategory, setActiveCategory] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null); // Custom Modal State
 
   const ITEMS_PER_PAGE = 9;
   const [currentPage, setCurrentPage] = useState(1);
@@ -76,112 +75,131 @@ const Catalog = () => {
   };
 
   return (
-    <section className="section catalog-section" id="catalogo">
-      <div className="container">
-        <div className="catalog-header">
-          <div>
-            <span className="subtitle"><EditableText id="catalog_tag" defaultText="COLECCIÓN" /></span>
-            <EditableText id="catalog_title" defaultText="NUESTROS DISEÑOS" as="h2" />
-          </div>
-          <div className="catalog-header-text">
-            <EditableText id="catalog_subtitle" defaultText="Cada modelo se personaliza con nombre, número y escudo a elección." as="p" />
-          </div>
-        </div>
-
-        <div className="catalog-search-wrapper">
-          <div className="search-box">
-            <Search size={20} color="#888" />
-            <input
-              type="text"
-              placeholder="Buscar diseño por nombre o código..."
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div className="catalog-filters">
-          {categories.map(c => (
-            <button
-              key={c.id}
-              className={`filter-btn ${activeCategory === c.name ? 'active' : ''}`}
-              onClick={() => setActiveCategory(c.name)}
-            >
-              {c.name.toUpperCase()}
-            </button>
-          ))}
-        </div>
-
-        <div className="catalog-grid">
-          {currentProducts.map((item) => (
-            <div className="catalog-card" key={item.id}>
-              <div className="card-tag">{item.category}</div>
-              <div className="catalog-image" style={{ cursor: 'zoom-in' }}>
-                <Zoom>
-                  <img src={item.image} alt={item.name} />
-                </Zoom>
-              </div>
-              <div className="catalog-info" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '1rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <div>
-                    <span className="design-id">DISEÑO #{item.code}</span>
-                    <h3>{item.name}</h3>
-                  </div>
-                </div>
-                <button 
-                  className="btn btn-outline" 
-                  style={{ width: '100%', display: 'flex', justifyContent: 'center', gap: '0.5rem', alignItems: 'center' }}
-                  onClick={() => navigate(`/armar-lista/${item.id}`)}
-                >
-                  <ListPlus size={18} /> Armar Lista
-                </button>
-              </div>
+    <>
+      <section className="section catalog-section" id="catalogo">
+        <div className="container">
+          <div className="catalog-header">
+            <div>
+              <span className="subtitle"><EditableText id="catalog_tag" defaultText="COLECCIÓN" /></span>
+              <EditableText id="catalog_title" defaultText="NUESTROS DISEÑOS" as="h2" />
             </div>
-          ))}
-          {filteredProducts.length === 0 && (
-            <div style={{ color: '#888', gridColumn: '1 / -1', textAlign: 'center', padding: '3rem' }}>
-              No se encontraron diseños.
+            <div className="catalog-header-text">
+              <EditableText id="catalog_subtitle" defaultText="Cada modelo se personaliza con nombre, número y escudo a elección." as="p" />
+            </div>
+          </div>
+
+          <div className="catalog-search-wrapper">
+            <div className="search-box">
+              <Search size={20} color="#888" />
+              <input
+                type="text"
+                placeholder="Buscar diseño por nombre o código..."
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="catalog-filters">
+            {categories.map(c => (
+              <button
+                key={c.id}
+                className={`filter-btn ${activeCategory === c.name ? 'active' : ''}`}
+                onClick={() => setActiveCategory(c.name)}
+              >
+                {c.name.toUpperCase()}
+              </button>
+            ))}
+          </div>
+
+          <div className="catalog-grid">
+            {currentProducts.map((item) => (
+              <div className="catalog-card" key={item.id}>
+                <div className="card-tag">{item.category}</div>
+                <div className="catalog-image" onClick={() => setSelectedImage(item)}>
+                  <div className="catalog-image-overlay">
+                    <span>Ver Diseño</span>
+                  </div>
+                  <img src={item.image} alt={item.name} />
+                </div>
+                <div className="catalog-info" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div>
+                      <span className="design-id">DISEÑO #{item.code}</span>
+                      <h3>{item.name}</h3>
+                    </div>
+                  </div>
+                  <button 
+                    className="btn btn-outline" 
+                    style={{ width: '100%', display: 'flex', justifyContent: 'center', gap: '0.5rem', alignItems: 'center' }}
+                    onClick={() => navigate(`/armar-lista/${item.id}`)}
+                  >
+                    <ListPlus size={18} /> Armar Lista
+                  </button>
+                </div>
+              </div>
+            ))}
+            {filteredProducts.length === 0 && (
+              <div style={{ color: '#888', gridColumn: '1 / -1', textAlign: 'center', padding: '3rem' }}>
+                No se encontraron diseños.
+              </div>
+            )}
+          </div>
+
+          {totalPages > 1 && (
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '3rem' }}>
+              <button 
+                className="btn btn-outline" 
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+              >
+                Anterior
+              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                {[...Array(totalPages)].map((_, i) => (
+                  <button
+                    key={i}
+                    style={{
+                      width: '40px', height: '40px', borderRadius: '50%',
+                      border: '1px solid var(--primary)',
+                      backgroundColor: currentPage === i + 1 ? 'var(--primary)' : 'transparent',
+                      color: currentPage === i + 1 ? '#000' : 'var(--primary)',
+                      fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                    }}
+                    onClick={() => handlePageChange(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+              <button 
+                className="btn btn-outline" 
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
+              >
+                Siguiente
+              </button>
             </div>
           )}
         </div>
+      </section>
 
-        {totalPages > 1 && (
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '3rem' }}>
-            <button 
-              className="btn btn-outline" 
-              disabled={currentPage === 1}
-              onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
-            >
-              Anterior
-            </button>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              {[...Array(totalPages)].map((_, i) => (
-                <button
-                  key={i}
-                  style={{
-                    width: '40px', height: '40px', borderRadius: '50%',
-                    border: '1px solid var(--primary)',
-                    backgroundColor: currentPage === i + 1 ? 'var(--primary)' : 'transparent',
-                    color: currentPage === i + 1 ? '#000' : 'var(--primary)',
-                    fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
-                  }}
-                  onClick={() => handlePageChange(i + 1)}
-                >
-                  {i + 1}
-                </button>
-              ))}
+      {/* Custom Aesthetic Modal */}
+      {selectedImage && (
+        <div className="image-modal-overlay" onClick={() => setSelectedImage(null)}>
+          <button className="image-modal-close" onClick={() => setSelectedImage(null)}>
+            <X size={32} />
+          </button>
+          <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
+            <img src={selectedImage.image} alt={selectedImage.name} />
+            <div className="image-modal-info">
+              <h4>{selectedImage.name}</h4>
+              <span>DISEÑO #{selectedImage.code}</span>
             </div>
-            <button 
-              className="btn btn-outline" 
-              disabled={currentPage === totalPages}
-              onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
-            >
-              Siguiente
-            </button>
           </div>
-        )}
-      </div>
-    </section>
+        </div>
+      )}
+    </>
   );
 };
 
