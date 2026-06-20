@@ -3,7 +3,11 @@ import { Search, ArrowRight, ListPlus, X } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import EditableText from './editor/EditableText';
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import Lightbox from "yet-another-react-lightbox";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import Captions from "yet-another-react-lightbox/plugins/captions";
+import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/captions.css";
 import './Catalog.css';
 
 const Catalog = () => {
@@ -185,36 +189,19 @@ const Catalog = () => {
         </div>
       </section>
 
-      {/* Custom Aesthetic Modal */}
-      {selectedImage && (
-        <div className="image-modal-overlay" onClick={() => setSelectedImage(null)}>
-          <button className="image-modal-close" onClick={() => setSelectedImage(null)}>
-            <X size={32} />
-          </button>
-          <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
-            <div style={{ cursor: 'grab', display: 'flex', justifyContent: 'center' }}>
-              <TransformWrapper
-                initialScale={1}
-                minScale={1}
-                maxScale={4}
-                centerZoomedOut={true}
-              >
-                {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
-                  <React.Fragment>
-                    <TransformComponent>
-                      <img src={selectedImage.image} alt={selectedImage.name} />
-                    </TransformComponent>
-                  </React.Fragment>
-                )}
-              </TransformWrapper>
-            </div>
-            <div className="image-modal-info">
-              <h4>{selectedImage.name}</h4>
-              <span>DISEÑO #{selectedImage.code}</span>
-            </div>
-          </div>
-        </div>
-      )}
+      <Lightbox
+        open={!!selectedImage}
+        close={() => setSelectedImage(null)}
+        slides={selectedImage ? [{ 
+          src: selectedImage.image, 
+          title: selectedImage.name, 
+          description: `DISEÑO #${selectedImage.code}` 
+        }] : []}
+        plugins={[Zoom, Captions]}
+        carousel={{ finite: true }}
+        render={{ buttonPrev: () => null, buttonNext: () => null }}
+        styles={{ container: { backgroundColor: "rgba(0, 0, 0, 0.95)" } }}
+      />
     </>
   );
 };
