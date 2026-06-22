@@ -10,14 +10,17 @@ const Hero = () => {
   const container = useRef(null);
 
   useGSAP(() => {
-    gsap.from('.hero-content > *', {
-      y: 40,
-      opacity: 0,
-      duration: 1,
-      stagger: 0.2,
-      ease: 'power3.out',
-      delay: 0.2
-    });
+    gsap.fromTo('.hero-content > *', 
+      { y: 40, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        stagger: 0.2,
+        ease: 'power3.out',
+        delay: 0.2
+      }
+    );
   }, { scope: container });
 
   return (

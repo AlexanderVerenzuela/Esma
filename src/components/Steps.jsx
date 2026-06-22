@@ -18,17 +18,20 @@ const Steps = () => {
   const sectionRef = useRef(null);
 
   useGSAP(() => {
-    gsap.from('.step-box', {
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: 'top 80%',
-      },
-      y: 50,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.15,
-      ease: 'back.out(1.2)'
-    });
+    gsap.fromTo('.step-box', 
+      { y: 50, opacity: 0 },
+      {
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 80%',
+        },
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: 'back.out(1.2)'
+      }
+    );
   }, { scope: sectionRef });
 
   React.useEffect(() => {

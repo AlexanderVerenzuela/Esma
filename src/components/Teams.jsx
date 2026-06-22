@@ -26,29 +26,35 @@ const Teams = () => {
   });
 
   useGSAP(() => {
-    gsap.from('.teams-header-text > *', {
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: 'top 80%',
-      },
-      x: -50,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.15,
-      ease: 'power3.out'
-    });
+    gsap.fromTo('.teams-header-text > *', 
+      { x: -50, opacity: 0 },
+      {
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 80%',
+        },
+        x: 0,
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: 'power3.out'
+      }
+    );
 
-    gsap.from('.embla', {
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: 'top 75%',
-      },
-      y: 50,
-      opacity: 0,
-      duration: 1,
-      ease: 'power2.out',
-      delay: 0.3
-    });
+    gsap.fromTo('.embla', 
+      { y: 50, opacity: 0 },
+      {
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 75%',
+        },
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        ease: 'power2.out',
+        delay: 0.3
+      }
+    );
   }, { scope: sectionRef });
 
   useEffect(() => {
