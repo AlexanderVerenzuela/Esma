@@ -16,6 +16,7 @@ const ListGenerator = () => {
   const [players, setPlayers] = useState([
     { id: Date.now(), talla: 'M', nombre: '', numero: '', pantaloneta: 'Sí' }
   ]);
+  const [activePlayerId, setActivePlayerId] = useState(players[0].id);
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -30,7 +31,9 @@ const ListGenerator = () => {
   }, [productId]);
 
   const addRow = () => {
-    setPlayers([...players, { id: Date.now(), talla: 'M', nombre: '', numero: '', pantaloneta: 'Sí' }]);
+    const newId = Date.now();
+    setPlayers([...players, { id: newId, talla: 'M', nombre: '', numero: '', pantaloneta: 'Sí' }]);
+    setActivePlayerId(newId);
   };
 
   const removeRow = (id) => {
@@ -176,7 +179,13 @@ const ListGenerator = () => {
                 </thead>
                 <tbody>
                   {players.map((player) => (
-                    <tr key={player.id}>
+                    <tr 
+                      key={player.id} 
+                      className={activePlayerId === player.id ? 'active-row' : 'collapsed-row'}
+                      onClick={() => {
+                        if (activePlayerId !== player.id) setActivePlayerId(player.id);
+                      }}
+                    >
                       <td data-label="Talla">
                         <select value={player.talla} onChange={(e) => updatePlayer(player.id, 'talla', e.target.value)}>
                           <option value="2">2</option>
