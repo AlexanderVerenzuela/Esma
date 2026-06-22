@@ -132,4 +132,58 @@
   .generator-form-grid {
     grid-template-columns: 1fr;
   }
+
+  .generator-table-wrapper {
+    overflow-x: hidden;
+    border: none;
+  }
+
+  .generator-table {
+    display: block;
+    min-width: 100%;
+  }
+
+  .generator-table thead {
+    display: none;
+  }
+
+  .generator-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .generator-table tr {
+    display: flex;
+    flex-direction: column;
+    background-color: #050505;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .generator-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: none;
+    padding: 0.5rem 0;
+  }
+
+  .generator-table td::before {
+    content: attr(data-label);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-transform: uppercase;
+    flex-basis: 40%;
+    margin-right: 1rem;
+  }
+
+  .generator-table input,
+  .generator-table select {
+    flex-basis: 60%;
+    max-width: 60%;
+    background-color: #111;
+  }
 }

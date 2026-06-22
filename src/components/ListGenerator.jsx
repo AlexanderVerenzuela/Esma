@@ -177,7 +177,7 @@ const ListGenerator = () => {
                 <tbody>
                   {players.map((player) => (
                     <tr key={player.id}>
-                      <td>
+                      <td data-label="Talla">
                         <select value={player.talla} onChange={(e) => updatePlayer(player.id, 'talla', e.target.value)}>
                           <option value="2">2</option>
                           <option value="4">4</option>
@@ -194,15 +194,15 @@ const ListGenerator = () => {
                           <option value="XXL">XXL</option>
                         </select>
                       </td>
-                      <td>
+                      <td data-label="Nombre">
                         <input
                           type="text"
-                          placeholder="Nombre"
+                          placeholder="Nombre en Camiseta"
                           value={player.nombre}
                           onChange={(e) => updatePlayer(player.id, 'nombre', e.target.value)}
                         />
                       </td>
-                      <td>
+                      <td data-label="Número">
                         <input
                           type="text"
                           placeholder="Ej. 10"
@@ -210,13 +210,13 @@ const ListGenerator = () => {
                           onChange={(e) => updatePlayer(player.id, 'numero', e.target.value)}
                         />
                       </td>
-                      <td>
+                      <td data-label="Short">
                         <select value={player.pantaloneta} onChange={(e) => updatePlayer(player.id, 'pantaloneta', e.target.value)}>
                           <option value="Sí">Sí</option>
                           <option value="No">No</option>
                         </select>
                       </td>
-                      <td>
+                      <td data-label="Acción">
                         <button className="btn-remove-row" onClick={() => removeRow(player.id)}>
                           <Trash2 size={18} /> <span style={{ fontSize: '0.8rem' }}>Quitar</span>
                         </button>
