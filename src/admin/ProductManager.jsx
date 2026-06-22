@@ -102,7 +102,7 @@ const ProductManager = () => {
       }
       
       const productData = {
-        code: formData.code,
+        code: formData.code || `PROD-${Date.now()}`,
         name: formData.name,
         category_id: parseInt(formData.categoryId),
         description: formData.description,
