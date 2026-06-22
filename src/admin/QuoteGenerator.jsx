@@ -81,14 +81,16 @@ const QuoteGenerator = () => {
 
     try {
       const canvas = await html2canvas(quoteRef.current, { scale: 2, useCORS: true });
-      const image = canvas.toDataURL("image/png");
+      // Use JPEG with 0.7 quality instead of PNG to drastically reduce file size
+      const image = canvas.toDataURL("image/jpeg", 0.7);
       
       // A4 dimensions in mm: 210 x 297
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
       
-      pdf.addImage(image, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      // Use FAST compression alias for jsPDF internal processing
+      pdf.addImage(image, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
       pdf.save(`Cotizacion_${formData.clientName || 'Esma'}.pdf`);
     } finally {
       wrapper.style.transform = originalTransform;
