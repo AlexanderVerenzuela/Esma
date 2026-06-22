@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Snowfall from 'react-snowfall';
 import PublicSite from './PublicSite';
 import ListGenerator from './components/ListGenerator';
 import AdminLayout from './admin/AdminLayout';
@@ -17,18 +16,6 @@ import './App.css';
 function App() {
   return (
     <SiteProvider>
-      <Snowfall 
-        style={{
-          position: 'fixed',
-          width: '100vw',
-          height: '100vh',
-          zIndex: 9999,
-        }}
-        snowflakeCount={150}
-        radius={[0.5, 2.5]}
-        speed={[0.5, 2.0]}
-        wind={[-0.5, 1.0]}
-      />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<PublicSite />} />
