@@ -96,12 +96,12 @@ const QuoteGenerator = () => {
   };
 
   return (
-    <div className="admin-container" style={{ display: 'flex', gap: '2rem', maxWidth: '1600px', margin: '0 auto' }}>
+    <div className="admin-container quote-generator-layout">
       {/* Left Column: Form */}
-      <div className="admin-card" style={{ flex: '1', minWidth: '400px', alignSelf: 'flex-start' }}>
+      <div className="admin-card quote-form-column">
         <h2>Generar Cotización</h2>
         
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem' }}>
           <div className="form-group" style={{ flex: 1 }}>
             <label>Nombre del Cliente</label>
             <input 
@@ -152,7 +152,7 @@ const QuoteGenerator = () => {
             >
               <Trash2 size={16} />
             </button>
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', marginTop: '10px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem', marginTop: '10px' }}>
               <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                 <input 
                   type="text" 
@@ -163,7 +163,7 @@ const QuoteGenerator = () => {
                 />
               </div>
             </div>
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem' }}>
               <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                 <input 
                   type="text" 
@@ -174,7 +174,7 @@ const QuoteGenerator = () => {
                 />
               </div>
             </div>
-            <div style={{ display: 'flex', gap: '1rem' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
               <div className="form-group" style={{ width: '100px', marginBottom: 0 }}>
                 <label style={{ fontSize: '11px', color: '#888' }}>Precio (S/.)</label>
                 <input 
@@ -229,7 +229,7 @@ const QuoteGenerator = () => {
           />
         </div>
 
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginTop: '2rem' }}>
           <button onClick={downloadAsPDF} className="admin-btn-primary" style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
             <Download size={18} /> Descargar PDF
           </button>
@@ -241,10 +241,10 @@ const QuoteGenerator = () => {
       </div>
 
       {/* Right Column: Preview */}
-      <div style={{ flex: '1', display: 'flex', justifyContent: 'center', background: '#111', padding: '2rem', borderRadius: '12px', overflow: 'hidden' }}>
+      <div className="quote-preview-container">
         {/* Wrapper to reserve exact scaled dimensions so it doesn't cause scrollbars */}
-        <div style={{ width: '555px', height: '786px', borderRadius: '8px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', background: '#fff', overflow: 'hidden' }}>
-          <div style={{ transform: 'scale(0.7)', transformOrigin: 'top left', width: '794px', height: '1123px' }}>
+        <div className="quote-preview-wrapper">
+          <div className="quote-preview-content">
             <QuoteTemplate 
               ref={quoteRef}
               data={{
