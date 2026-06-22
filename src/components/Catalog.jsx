@@ -149,8 +149,8 @@ const Catalog = () => {
                   </div>
                   <img src={item.image} alt={item.name} />
                 </div>
-                <div className="catalog-info" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '1rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div className="catalog-info" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '1rem', flexGrow: 1 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexGrow: 1 }}>
                     <div>
                       <span className="design-id">DISEÑO #{item.code}</span>
                       <h3>{item.name}</h3>
@@ -158,10 +158,10 @@ const Catalog = () => {
                   </div>
                   <button 
                     className="btn btn-outline" 
-                    style={{ width: '100%', display: 'flex', justifyContent: 'center', gap: '0.5rem', alignItems: 'center' }}
+                    style={{ width: '100%', display: 'flex', justifyContent: 'center', gap: '0.5rem', alignItems: 'center', marginTop: 'auto', padding: '0.5rem', fontSize: '0.9rem' }}
                     onClick={() => navigate(`/armar-lista/${item.id}`)}
                   >
-                    <ListPlus size={18} /> Armar Lista
+                    <ListPlus size={16} /> Armar Lista
                   </button>
                 </div>
               </div>

@@ -89,6 +89,8 @@
   position: relative;
   border: 1px solid var(--border-color);
   transition: var(--transition);
+  display: flex;
+  flex-direction: column;
 }
 
 .catalog-card:hover {
