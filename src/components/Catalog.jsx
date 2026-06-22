@@ -98,16 +98,16 @@ const Catalog = () => {
     if (currentProducts.length === 0) return;
 
     gsap.fromTo('.catalog-card', 
-      { y: 40, opacity: 0 },
+      { y: 80, opacity: 0 },
       {
         scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 80%',
+          trigger: '.catalog-grid',
+          start: 'top 85%',
         },
         y: 0,
         opacity: 1,
-        duration: 0.6,
-        stagger: 0.1,
+        duration: 0.8,
+        stagger: 0.15,
         ease: 'power2.out'
       }
     );

@@ -22,7 +22,7 @@ const Steps = () => {
       { y: 50, opacity: 0 },
       {
         scrollTrigger: {
-          trigger: sectionRef.current,
+          trigger: '.steps-wrapper',
           start: 'top 80%',
         },
         y: 0,
