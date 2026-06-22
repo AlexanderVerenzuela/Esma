@@ -104,6 +104,10 @@ p {
   .container {
     padding: 0 1.2rem;
   }
+
+  .section {
+    padding: 3rem 0;
+  }
 }
 
 .mb-2 {
