@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { MessageSquare, PenTool, Shirt, Factory, Package } from 'lucide-react';
 import EditableText from './editor/EditableText';
 import './Steps.css';
@@ -12,6 +12,28 @@ const stepsData = [
 ];
 
 const Steps = () => {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const container = containerRef.current;
+      // Auto-scroll solo aplica cuando estamos en vista móvil (donde el carrusel existe)
+      if (container && window.innerWidth <= 1024) {
+        // -10 para tener un margen de error por redondeos de píxeles
+        const isEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 10;
+        
+        if (isEnd) {
+          container.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          // Desplazar a la derecha (el CSS scroll-snap se encargará de alinear la tarjeta perfectamente)
+          container.scrollBy({ left: container.clientWidth * 0.8, behavior: 'smooth' });
+        }
+      }
+    }, 3500); // 3.5 segundos por tarjeta
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="section steps-section" id="pasos">
       <div className="container">
@@ -34,7 +56,7 @@ const Steps = () => {
         
         <div className="steps-wrapper">
           <div className="steps-line"></div>
-          <div className="steps-container">
+          <div className="steps-container" ref={containerRef}>
             {stepsData.map((step, index) => (
               <div className="step-box" key={index}>
                 <div className="step-icon-wrapper">
