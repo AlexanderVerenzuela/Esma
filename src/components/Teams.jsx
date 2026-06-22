@@ -52,6 +52,15 @@ const Teams = () => {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
 
+  // Auto-play feature for both PC and mobile
+  useEffect(() => {
+    if (!emblaApi) return;
+    const autoplayInterval = setInterval(() => {
+      emblaApi.scrollNext();
+    }, 4000); // 4 seconds per slide
+    return () => clearInterval(autoplayInterval);
+  }, [emblaApi]);
+
   return (
     <section className="section teams-section" id="equipos">
       <div className="container">
