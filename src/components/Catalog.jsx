@@ -40,7 +40,8 @@ const Catalog = () => {
     }
   };
 
-  const ITEMS_PER_PAGE = 9;
+  // Usamos 10 en móvil para que encajen perfectos en 2 columnas (5 filas), y 9 en PC para 3 columnas
+  const ITEMS_PER_PAGE = window.innerWidth <= 768 ? 10 : 9;
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
