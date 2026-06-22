@@ -79,7 +79,7 @@ const Catalog = () => {
   };
 
   const filteredProducts = products.filter(p => {
-    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.code.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCat = activeCategory === 'Todos' || p.category === activeCategory;
     return matchesSearch && matchesCat;
   });
@@ -120,7 +120,7 @@ const Catalog = () => {
               <Search size={20} color="#888" />
               <input
                 type="text"
-                placeholder="Buscar diseño por nombre o código..."
+                placeholder="Buscar diseño por nombre..."
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
               />
@@ -152,7 +152,7 @@ const Catalog = () => {
                 <div className="catalog-info" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '1rem', flexGrow: 1 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexGrow: 1 }}>
                     <div>
-                      <span className="design-id">DISEÑO #{item.code}</span>
+                      {/* <span className="design-id">DISEÑO #{item.code}</span> */}
                       <h3>{item.name}</h3>
                     </div>
                   </div>
@@ -232,7 +232,7 @@ const Catalog = () => {
             />
             <div className="image-modal-info">
               <h4>{selectedImage.name}</h4>
-              <span>DISEÑO #{selectedImage.code}</span>
+              {/* <span>DISEÑO #{selectedImage.code}</span> */}
             </div>
           </div>
         </div>

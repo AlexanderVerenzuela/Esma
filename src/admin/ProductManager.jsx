@@ -84,7 +84,7 @@ const ProductManager = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.code || !formData.name || !formData.categoryId) {
+    if (!formData.name || !formData.categoryId) {
       alert('Por favor completa todos los campos requeridos.');
       return;
     }
@@ -183,7 +183,7 @@ const ProductManager = () => {
 
   const filteredProducts = products.filter(p => 
     p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    p.code.toLowerCase().includes(searchQuery.toLowerCase())
+    p.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -214,17 +214,7 @@ const ProductManager = () => {
           <h2>{editingId ? 'Editar Producto' : 'Agregar Nuevo Producto'}</h2>
           <form onSubmit={handleSubmit} className="admin-form">
             <div className="form-group">
-              <label>Código del Producto</label>
-              <input 
-                type="text" 
-                value={formData.code} 
-                onChange={e => setFormData({...formData, code: e.target.value})}
-                placeholder="Ej. ESMA-001"
-              />
-            </div>
-            
-            <div className="form-group">
-              <label>Nombre</label>
+              <label>Nombre del Diseño</label>
               <input 
                 type="text" 
                 value={formData.name} 
@@ -299,7 +289,7 @@ const ProductManager = () => {
               {product.isFeatured && <span className="featured-badge">Destacado</span>}
             </div>
             <div className="product-card-info">
-              <span className="product-code">{product.code}</span>
+              {/* <span className="product-code">{product.code}</span> */}
               <h3>{product.name}</h3>
               <p className="product-category">{product.categoryName}</p>
             </div>

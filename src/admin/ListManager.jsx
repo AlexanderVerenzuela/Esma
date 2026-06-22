@@ -19,7 +19,7 @@ const ListManager = () => {
         .from('team_lists')
         .select(`
           *,
-          product:design_id (name, code)
+          product:design_id (name)
         `)
         .order('created_at', { ascending: false });
 
@@ -101,7 +101,7 @@ const ListManager = () => {
                 <td>{new Date(list.created_at).toLocaleDateString()}</td>
                 <td>{list.client_name}</td>
                 <td><strong>{list.team_name}</strong></td>
-                <td>{list.product ? `${list.product.name} (#${list.product.code})` : 'Diseño eliminado'}</td>
+                <td>{list.product ? list.product.name : 'Diseño eliminado'}</td>
                 <td>{list.players_data.length} jug.</td>
                 <td>
                   <button className="admin-btn" style={{ marginRight: '0.5rem' }} onClick={() => setSelectedList(list)}>

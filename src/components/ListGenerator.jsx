@@ -120,7 +120,7 @@ const ListGenerator = () => {
           <div className="generator-header">
             <div>
               <h2 style={{ marginBottom: '0.5rem' }}>CREAR LISTA DE JUGADORES</h2>
-              {product && <p style={{ color: '#888' }}>Diseño seleccionado: <strong>{product.name} (Ref: {product.code})</strong></p>}
+              {product && <p style={{ color: '#888' }}>Diseño seleccionado: <strong>{product.name}</strong></p>}
             </div>
             <button className="btn btn-outline" onClick={() => navigate('/')} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
               <ArrowLeft size={18} /> Volver
