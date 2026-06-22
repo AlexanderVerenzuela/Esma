@@ -111,6 +111,7 @@
   height: 350px;
   overflow: hidden;
   background-color: #0a0a0a;
+  position: relative;
 }
 
 .catalog-image img {
