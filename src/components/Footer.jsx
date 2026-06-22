@@ -20,7 +20,7 @@ const Footer = () => {
             as="p" 
             className="mb-4" 
           />
-          <a href="https://wa.me/000000000" className="btn btn-solid-primary mt-4" target="_blank" rel="noreferrer">
+          <a href="https://wa.me/51943396733" className="btn btn-solid-primary mt-4" target="_blank" rel="noreferrer">
             <MessageCircle size={20} /> <EditableText id="footer_btn" defaultText="SOLICITAR DISEÑO POR WHATSAPP" />
           </a>
         </div>

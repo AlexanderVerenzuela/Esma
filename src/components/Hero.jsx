@@ -42,7 +42,7 @@ const Hero = () => {
           as="p" 
           className="hero-subtitle" 
         />
-        <a href="https://wa.me/000000000?text=Hola%20Esma%20Sportwear%2C%20quiero%20cotizar%20uniformes" className="btn btn-primary" target="_blank" rel="noreferrer">
+        <a href="https://wa.me/51943396733?text=Hola%20Esma%20Sportwear%2C%20quiero%20cotizar%20uniformes" className="btn btn-primary" target="_blank" rel="noreferrer">
           <MessageCircle size={20} /> <EditableText id="hero_btn" defaultText="COTIZAR POR WHATSAPP" />
         </a>
       </div>

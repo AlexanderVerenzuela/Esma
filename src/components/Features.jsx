@@ -25,7 +25,7 @@ const Features = () => {
               as="p" 
               className="mb-4 mt-4" 
             />
-            <a href="https://wa.me/000000000" className="btn btn-outline" target="_blank" rel="noreferrer">
+            <a href="https://wa.me/51943396733" className="btn btn-outline" target="_blank" rel="noreferrer">
               <EditableText id="feat_btn" defaultText="DISEÑAR AHORA" /> <ArrowRight size={18} />
             </a>
           </div>
