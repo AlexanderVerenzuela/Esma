@@ -19,19 +19,7 @@ const Catalog = () => {
 
   const sectionRef = useRef(null);
 
-  useGSAP(() => {
-    gsap.from('.catalog-card', {
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: 'top 75%',
-      },
-      y: 40,
-      opacity: 0,
-      duration: 0.6,
-      stagger: 0.1,
-      ease: 'power2.out'
-    });
-  }, { scope: sectionRef, dependencies: [currentProducts] });
+
 
   const handleCloseModal = () => {
     setSelectedImage(null);
@@ -105,6 +93,20 @@ const Catalog = () => {
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const currentProducts = filteredProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  useGSAP(() => {
+    gsap.from('.catalog-card', {
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top 75%',
+      },
+      y: 40,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.1,
+      ease: 'power2.out'
+    });
+  }, { scope: sectionRef, dependencies: [currentProducts] });
 
   const handlePageChange = (newPage) => {
     const catalogSection = document.getElementById('catalogo');
