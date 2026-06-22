@@ -18,6 +18,16 @@ import './App.css';
 gsap.registerPlugin(ScrollTrigger);
 
 function App() {
+  React.useEffect(() => {
+    const handleContextMenu = (e) => {
+      if (e.target.tagName === 'IMG') {
+        e.preventDefault();
+      }
+    };
+    document.addEventListener('contextmenu', handleContextMenu);
+    return () => document.removeEventListener('contextmenu', handleContextMenu);
+  }, []);
+
   return (
     <SiteProvider>
       <BrowserRouter>

@@ -28,6 +28,25 @@ html {
   box-sizing: border-box;
 }
 
+/* 
+ * Image Protection 
+ * Prevents dragging, text selection, and long-press menus on mobile devices
+ */
+img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: auto; /* Ensure clicks still work for zoom/modals */
+}
+
 body {
   font-family: var(--font-body);
   background-color: var(--bg-dark);
