@@ -1,14 +1,29 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { MessageCircle } from 'lucide-react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import EditableText from './editor/EditableText';
 import EditableImage from './editor/EditableImage';
 import './Hero.css';
 
 const Hero = () => {
+  const container = useRef(null);
+
+  useGSAP(() => {
+    gsap.from('.hero-content > *', {
+      y: 40,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.2,
+      ease: 'power3.out',
+      delay: 0.2
+    });
+  }, { scope: container });
+
   return (
     <EditableImage id="hero_bg" defaultSrc="/images/hero_background_1781810278116.png" isBackground={true} className="hero">
       <div className="hero-overlay"></div>
-      <div className="container hero-content">
+      <div className="container hero-content" ref={container}>
         <div className="pill-tag">
           <span className="pill-dot"></span> <EditableText id="hero_tag" defaultText="CATÁLOGO 2026" />
         </div>

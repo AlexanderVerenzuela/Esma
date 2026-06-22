@@ -1,5 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { MessageSquare, PenTool, Shirt, Factory, Package } from 'lucide-react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import EditableText from './editor/EditableText';
 import './Steps.css';
 
@@ -13,29 +15,41 @@ const stepsData = [
 
 const Steps = () => {
   const containerRef = useRef(null);
+  const sectionRef = useRef(null);
 
-  useEffect(() => {
+  useGSAP(() => {
+    gsap.from('.step-box', {
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top 80%',
+      },
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.15,
+      ease: 'back.out(1.2)'
+    });
+  }, { scope: sectionRef });
+
+  React.useEffect(() => {
     const interval = setInterval(() => {
       const container = containerRef.current;
-      // Auto-scroll solo aplica cuando estamos en vista móvil (donde el carrusel existe)
       if (container && window.innerWidth <= 1024) {
-        // -10 para tener un margen de error por redondeos de píxeles
         const isEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 10;
         
         if (isEnd) {
           container.scrollTo({ left: 0, behavior: 'smooth' });
         } else {
-          // Desplazar a la derecha (el CSS scroll-snap se encargará de alinear la tarjeta perfectamente)
           container.scrollBy({ left: container.clientWidth * 0.8, behavior: 'smooth' });
         }
       }
-    }, 3500); // 3.5 segundos por tarjeta
+    }, 3500);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <section className="section steps-section" id="pasos">
+    <section className="section steps-section" id="pasos" ref={sectionRef}>
       <div className="container">
         <div className="text-center mb-4">
           <div className="pill-tag" style={{margin: '0 auto 1.5rem'}}>

@@ -11,7 +11,11 @@ import ListManager from './admin/ListManager';
 import Settings from './admin/Settings';
 import QuoteGenerator from './admin/QuoteGenerator';
 import { SiteProvider } from './context/SiteContext';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './App.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   return (

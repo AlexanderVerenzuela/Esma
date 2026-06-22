@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { supabase } from '../supabaseClient';
 import EditableText from './editor/EditableText';
 import './Teams.css';
@@ -14,16 +16,40 @@ const fallbackData = [
 
 const Teams = () => {
   const [teamsData, setTeamsData] = useState([]);
+  const sectionRef = useRef(null);
   
-  // Initialize Embla Carousel
-  // loop: true -> Infinite carousel
-  // align: 'center' -> Active slide is centered, showing parts of previous/next
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true, 
     align: 'center', 
     skipSnaps: false,
     dragFree: false
   });
+
+  useGSAP(() => {
+    gsap.from('.teams-header-text > *', {
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top 80%',
+      },
+      x: -50,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.15,
+      ease: 'power3.out'
+    });
+
+    gsap.from('.embla', {
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top 75%',
+      },
+      y: 50,
+      opacity: 0,
+      duration: 1,
+      ease: 'power2.out',
+      delay: 0.3
+    });
+  }, { scope: sectionRef });
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -52,17 +78,16 @@ const Teams = () => {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
 
-  // Auto-play feature for both PC and mobile
   useEffect(() => {
     if (!emblaApi) return;
     const autoplayInterval = setInterval(() => {
       emblaApi.scrollNext();
-    }, 4000); // 4 seconds per slide
+    }, 4000); 
     return () => clearInterval(autoplayInterval);
   }, [emblaApi]);
 
   return (
-    <section className="section teams-section" id="equipos">
+    <section className="section teams-section" id="equipos" ref={sectionRef}>
       <div className="container">
         <div className="teams-header">
           <div className="teams-header-text">

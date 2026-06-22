@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Search, ArrowRight, ListPlus, X } from 'lucide-react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import EditableText from './editor/EditableText';
@@ -12,8 +14,24 @@ const Catalog = () => {
   const [categories, setCategories] = useState([{ id: 'todos', name: 'Todos' }]);
   const [activeCategory, setActiveCategory] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedImage, setSelectedImage] = useState(null); // Custom Modal State
+  const [selectedImage, setSelectedImage] = useState(null); 
   const [zoomStyle, setZoomStyle] = useState({ transform: 'scale(1)', cursor: 'zoom-in', transformOrigin: 'center center' });
+
+  const sectionRef = useRef(null);
+
+  useGSAP(() => {
+    gsap.from('.catalog-card', {
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top 75%',
+      },
+      y: 40,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.1,
+      ease: 'power2.out'
+    });
+  }, { scope: sectionRef, dependencies: [currentProducts] });
 
   const handleCloseModal = () => {
     setSelectedImage(null);
@@ -40,7 +58,6 @@ const Catalog = () => {
     }
   };
 
-  // Usamos 10 en móvil para que encajen perfectos en 2 columnas (5 filas), y 9 en PC para 3 columnas
   const ITEMS_PER_PAGE = window.innerWidth <= 768 ? 10 : 9;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -96,7 +113,6 @@ const Catalog = () => {
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
     
-    // Allow the smooth scroll to start before snapping the layout height
     setTimeout(() => {
       setCurrentPage(newPage);
     }, 400);
@@ -104,7 +120,7 @@ const Catalog = () => {
 
   return (
     <>
-      <section className="section catalog-section" id="catalogo">
+      <section className="section catalog-section" id="catalogo" ref={sectionRef}>
         <div className="container">
           <div className="catalog-header">
             <div>
