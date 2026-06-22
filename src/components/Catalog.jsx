@@ -95,17 +95,22 @@ const Catalog = () => {
   const currentProducts = filteredProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   useGSAP(() => {
-    gsap.from('.catalog-card', {
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: 'top 75%',
-      },
-      y: 40,
-      opacity: 0,
-      duration: 0.6,
-      stagger: 0.1,
-      ease: 'power2.out'
-    });
+    if (currentProducts.length === 0) return;
+
+    gsap.fromTo('.catalog-card', 
+      { y: 40, opacity: 0 },
+      {
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 80%',
+        },
+        y: 0,
+        opacity: 1,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: 'power2.out'
+      }
+    );
   }, { scope: sectionRef, dependencies: [currentProducts] });
 
   const handlePageChange = (newPage) => {
