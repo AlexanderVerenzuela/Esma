@@ -157,15 +157,6 @@ const ListGenerator = () => {
           <div className="generator-card">
             <h3 style={{ marginBottom: '1.5rem', fontSize: '1.2rem', color: 'var(--primary)' }}>Jugadores</h3>
 
-            <div className="table-toolbar">
-              <button className="btn btn-solid-primary" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }} onClick={addRow}>
-                <Plus size={18} /> Agregar Fila
-              </button>
-              <button className="btn btn-outline" onClick={() => setPlayers([{ id: Date.now(), talla: 'M', nombre: '', numero: '', pantaloneta: 'Sí' }])}>
-                Limpiar datos
-              </button>
-            </div>
-
             <div className="generator-table-wrapper">
               <table className="generator-table">
                 <thead>
@@ -234,6 +225,24 @@ const ListGenerator = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            <div className="table-toolbar" style={{ marginTop: '1.5rem', marginBottom: '0' }}>
+              <button className="btn btn-solid-primary" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }} onClick={addRow}>
+                <Plus size={18} /> Agregar Fila
+              </button>
+              <button 
+                className="btn btn-outline" 
+                onClick={() => {
+                  if (window.confirm('¿Estás seguro de que deseas limpiar todos los datos ingresados?')) {
+                    const newId = Date.now();
+                    setPlayers([{ id: newId, talla: 'M', nombre: '', numero: '', pantaloneta: 'Sí' }]);
+                    setActivePlayerId(newId);
+                  }
+                }}
+              >
+                Limpiar datos
+              </button>
             </div>
 
             <div className="submit-section">
