@@ -202,15 +202,35 @@
     display: none;
   }
 
-  .generator-table tr.collapsed-row td[data-label="Talla"],
   .generator-table tr.collapsed-row td[data-label="Short"] {
     display: none;
   }
 
-  .generator-table tr.collapsed-row td[data-label="Número"] {
-    width: 40px;
+  .generator-table tr.collapsed-row td[data-label="Talla"] {
     flex-basis: auto;
     order: 1;
+    justify-content: flex-start;
+  }
+
+  .generator-table tr.collapsed-row td[data-label="Talla"] select {
+    color: #000;
+    background-color: var(--primary) !important;
+    border-radius: 6px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 800;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    text-align: center;
+    pointer-events: none;
+    border: none;
+  }
+
+  .generator-table tr.collapsed-row td[data-label="Número"] {
+    width: 35px;
+    flex-basis: auto;
+    order: 2;
     justify-content: flex-start;
   }
 
@@ -223,13 +243,13 @@
   .generator-table tr.collapsed-row td[data-label="Nombre"] {
     flex-grow: 1;
     flex-basis: auto;
-    order: 2;
+    order: 3;
     justify-content: flex-start;
   }
 
   .generator-table tr.collapsed-row td[data-label="Acción"] {
     flex-basis: auto;
-    order: 3;
+    order: 4;
     justify-content: flex-end;
   }
 
