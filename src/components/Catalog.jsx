@@ -171,6 +171,7 @@ const Catalog = () => {
             {currentProducts.map((item) => (
               <div className="catalog-card" key={item.id}>
                 <div className="card-tag">{item.category}</div>
+                {item.is_featured && <div className="featured-badge">DESTACADO</div>}
                 <div className="catalog-image" onClick={() => setSelectedImage(item)}>
                   <div className="catalog-image-overlay">
                     <span>Ver Diseño</span>
