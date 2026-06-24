@@ -77,7 +77,11 @@ const Catalog = () => {
         ...p,
         category: p.categories?.name,
         image: p.main_image
-      }));
+      })).sort((a, b) => {
+        if (a.is_featured && !b.is_featured) return -1;
+        if (!a.is_featured && b.is_featured) return 1;
+        return 0;
+      });
       setProducts(formatted);
     } catch (err) {
       console.error(err);
