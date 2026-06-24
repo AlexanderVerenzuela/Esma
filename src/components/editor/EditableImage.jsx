@@ -21,14 +21,14 @@ const EditableImage = ({ id, defaultSrc, className = '', style = {}, isBackgroun
       const fileName = `${id}_${Date.now()}.${fileExt}`;
       const filePath = `${fileName}`;
 
-      // We use the 'products' bucket since it's already public and working
+      // We use the 'images' bucket since it's already public and working
       const { error: uploadError } = await supabase.storage
-        .from('products')
+        .from('images')
         .upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
-      const { data } = supabase.storage.from('products').getPublicUrl(filePath);
+      const { data } = supabase.storage.from('images').getPublicUrl(filePath);
       
       updateContent(id, data.publicUrl);
     } catch (err) {
