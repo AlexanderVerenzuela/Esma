@@ -176,7 +176,7 @@ const Catalog = () => {
                   <div className="catalog-image-overlay">
                     <span>Ver Diseño</span>
                   </div>
-                  <img src={item.image} alt={item.name} />
+                  <img src={item.image} alt={item.name} loading="lazy" />
                 </div>
                 <div className="catalog-info" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '1rem', flexGrow: 1 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexGrow: 1 }}>
