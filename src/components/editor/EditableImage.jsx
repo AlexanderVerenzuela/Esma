@@ -74,9 +74,8 @@ const EditableImage = ({
   if (isBackground) {
     const inlineStyles = {
       ...style,
-      '--bg-pc': `url(${currentSrc})`,
+      backgroundImage: `url(${currentSrc})`,
       '--bg-mobile': mobileId ? `url(${currentMobileSrc})` : `url(${currentSrc})`,
-      backgroundImage: 'var(--bg-pc)',
       position: 'relative'
     };
 
