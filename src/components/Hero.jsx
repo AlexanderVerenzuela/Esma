@@ -24,7 +24,14 @@ const Hero = () => {
   }, { scope: container });
 
   return (
-    <EditableImage id="hero_bg" defaultSrc="/images/hero_background_1781810278116.png" isBackground={true} className="hero">
+    <EditableImage 
+      id="hero_bg" 
+      defaultSrc="/images/hero_background_1781810278116.png" 
+      mobileId="hero_bg_mobile"
+      defaultMobileSrc="/images/banner-cel.png"
+      isBackground={true} 
+      className="hero"
+    >
       <div className="hero-overlay"></div>
       <div className="container hero-content" ref={container}>
         <div className="pill-tag">
