@@ -21,6 +21,17 @@ const EditableImage = ({
   const pcFileInputRef = useRef(null);
   const mobileFileInputRef = useRef(null);
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const currentSrc = content[id] !== undefined ? content[id] : defaultSrc;
   const currentMobileSrc = mobileId ? (content[mobileId] !== undefined ? content[mobileId] : defaultMobileSrc) : null;
 
@@ -72,10 +83,10 @@ const EditableImage = ({
   };
 
   if (isBackground) {
+    const activeBg = (isMobile && mobileId) ? currentMobileSrc : currentSrc;
     const inlineStyles = {
       ...style,
-      backgroundImage: `url(${currentSrc})`,
-      '--bg-mobile': mobileId ? `url(${currentMobileSrc})` : `url(${currentSrc})`,
+      backgroundImage: `url(${activeBg})`,
       position: 'relative'
     };
 
