@@ -3,7 +3,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { supabase } from '../supabaseClient';
+import { supabase, getTenantId, getTenantSlug } from '../supabaseClient';
 import EditableText from './editor/EditableText';
 import './Teams.css';
 
@@ -17,6 +17,7 @@ const fallbackData = [
 const Teams = () => {
   const [teamsData, setTeamsData] = useState([]);
   const sectionRef = useRef(null);
+  const [tenantSlug, setTenantSlug] = useState('default');
   
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true, 
@@ -58,9 +59,15 @@ const Teams = () => {
   }, { scope: sectionRef });
 
   useEffect(() => {
+    setTenantSlug(getTenantSlug());
     const fetchTeams = async () => {
       try {
-        const { data, error } = await supabase.from('teams').select('*').order('created_at', { ascending: false });
+        const tenantId = await getTenantId();
+        const { data, error } = await supabase
+          .from('teams')
+          .select('*')
+          .eq('tenant_id', tenantId)
+          .order('created_at', { ascending: false });
         if (error) throw error;
         
         if (data && data.length > 0) {
@@ -99,7 +106,7 @@ const Teams = () => {
           <div className="teams-header-text">
             <span className="subtitle"><EditableText id="teams_tag" defaultText="TRABAJOS" /></span>
             <EditableText id="teams_title" defaultText="EQUIPOS QUE CONFÍAN" as="h2" />
-            <EditableText id="teams_desc" defaultText="Algunos de los equipos que ya visten Esma Sportwear." as="p" />
+            <EditableText id="teams_desc" defaultText="Algunos de los equipos que ya visten nuestra marca." as="p" />
           </div>
           <div className="teams-nav-buttons">
             <button className="carousel-nav-btn" onClick={scrollPrev}>
@@ -125,7 +132,7 @@ const Teams = () => {
                     <span className="team-year">{team.year}</span>
                     <h3>{team.name}</h3>
                   </div>
-                  <div className="team-esma-badge">ESMA</div>
+                  <div className="team-esma-badge">{tenantSlug === 'demo' ? 'DEMO' : 'ESMA'}</div>
                 </div>
               </div>
             </div>

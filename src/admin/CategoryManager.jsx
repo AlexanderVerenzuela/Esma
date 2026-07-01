@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
-import { supabase } from '../supabaseClient';
+import { supabase, getTenantId } from '../supabaseClient';
 
 const CategoryManager = () => {
   const [categories, setCategories] = useState([]);
@@ -12,7 +12,12 @@ const CategoryManager = () => {
 
   const fetchCategories = async () => {
     try {
-      const { data, error } = await supabase.from('categories').select('*').order('id', { ascending: true });
+      const tenantId = await getTenantId();
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .eq('tenant_id', tenantId)
+        .order('id', { ascending: true });
       if (error) throw error;
       setCategories(data || []);
     } catch (err) {
@@ -24,7 +29,8 @@ const CategoryManager = () => {
     e.preventDefault();
     if (!newCategory.trim()) return;
     try {
-      const { error } = await supabase.from('categories').insert([{ name: newCategory }]);
+      const tenantId = await getTenantId();
+      const { error } = await supabase.from('categories').insert([{ tenant_id: tenantId, name: newCategory }]);
       if (error) throw error;
       setNewCategory('');
       fetchCategories();
@@ -37,7 +43,12 @@ const CategoryManager = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('¿Seguro que deseas eliminar esta categoría?')) return;
     try {
-      const { error } = await supabase.from('categories').delete().eq('id', id);
+      const tenantId = await getTenantId();
+      const { error } = await supabase
+        .from('categories')
+        .delete()
+        .eq('id', id)
+        .eq('tenant_id', tenantId);
       if (error) throw error;
       fetchCategories();
     } catch (err) {

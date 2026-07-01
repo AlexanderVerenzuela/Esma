@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '../supabaseClient';
+import { supabase, getTenantId } from '../supabaseClient';
 
 const SiteContext = createContext();
 
@@ -36,7 +36,11 @@ export const SiteProvider = ({ children }) => {
 
   const fetchSettings = async () => {
     try {
-      const { data, error } = await supabase.from('site_settings').select('*');
+      const tenantId = await getTenantId();
+      const { data, error } = await supabase
+        .from('site_settings')
+        .select('*')
+        .eq('tenant_id', tenantId);
       if (error) throw error;
       
       const contentMap = {};
@@ -56,9 +60,10 @@ export const SiteProvider = ({ children }) => {
       // Optimistic update
       setContent(prev => ({ ...prev, [id]: newValue }));
       
+      const tenantId = await getTenantId();
       const { error } = await supabase
         .from('site_settings')
-        .upsert({ id, content: newValue, updated_at: new Date().toISOString() });
+        .upsert({ tenant_id: tenantId, id, content: newValue, updated_at: new Date().toISOString() });
         
       if (error) throw error;
     } catch (err) {

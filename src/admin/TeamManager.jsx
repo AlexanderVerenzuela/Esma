@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Trash2, Upload, Plus, Edit } from 'lucide-react';
-import { supabase } from '../supabaseClient';
+import { supabase, getTenantId } from '../supabaseClient';
 import './Admin.css';
 
 const TeamManager = () => {
@@ -21,7 +21,12 @@ const TeamManager = () => {
 
   const fetchTeams = async () => {
     try {
-      const { data, error } = await supabase.from('teams').select('*').order('created_at', { ascending: false });
+      const tenantId = await getTenantId();
+      const { data, error } = await supabase
+        .from('teams')
+        .select('*')
+        .eq('tenant_id', tenantId)
+        .order('created_at', { ascending: false });
       if (error) throw error;
       setTeams(data || []);
     } catch (err) {
@@ -71,7 +76,9 @@ const TeamManager = () => {
         imageUrl = await uploadImage(formData.image);
       }
 
+      const tenantId = await getTenantId();
       const teamData = {
+        tenant_id: tenantId,
         name: formData.name,
         year: formData.year,
       };
@@ -81,7 +88,11 @@ const TeamManager = () => {
       }
 
       if (editingId) {
-        const { error } = await supabase.from('teams').update(teamData).eq('id', editingId);
+        const { error } = await supabase
+          .from('teams')
+          .update(teamData)
+          .eq('id', editingId)
+          .eq('tenant_id', tenantId);
         if (error) throw error;
       } else {
         const { error } = await supabase.from('teams').insert([teamData]);
@@ -122,7 +133,12 @@ const TeamManager = () => {
         }
       }
 
-      const { error } = await supabase.from('teams').delete().eq('id', team.id);
+      const tenantId = await getTenantId();
+      const { error } = await supabase
+        .from('teams')
+        .delete()
+        .eq('id', team.id)
+        .eq('tenant_id', tenantId);
       if (error) throw error;
       
       fetchTeams();

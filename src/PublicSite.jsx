@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Steps from './components/Steps';
@@ -10,7 +10,20 @@ import { useSite } from './context/SiteContext';
 import { Settings, X } from 'lucide-react';
 
 const PublicSite = () => {
-  const { isAdmin, isEditMode, setIsEditMode } = useSite();
+  const { isAdmin, isEditMode, setIsEditMode, loading } = useSite();
+  const [loaderMounted, setLoaderMounted] = useState(true);
+  const [loaderOpacity, setLoaderOpacity] = useState(1);
+
+  useEffect(() => {
+    if (!loading) {
+      // Start fade out transition
+      setLoaderOpacity(0);
+      const timer = setTimeout(() => {
+        setLoaderMounted(false);
+      }, 1000); // Matches the 1s transition duration
+      return () => clearTimeout(timer);
+    }
+  }, [loading]);
 
   return (
     <>
@@ -21,6 +34,21 @@ const PublicSite = () => {
       <Features />
       <Teams />
       <Footer />
+
+      {loaderMounted && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          backgroundColor: '#000',
+          zIndex: 10000,
+          opacity: loaderOpacity,
+          transition: 'opacity 1s ease-in-out',
+          pointerEvents: 'none'
+        }} />
+      )}
       
       {isAdmin && (
         <div style={{

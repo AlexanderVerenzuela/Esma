@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, Tags, Users, LogOut, Settings, Menu, X, ClipboardList, FileText } from 'lucide-react';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { LayoutDashboard, Package, Tags, Users, LogOut, Settings, Menu, X, ClipboardList, FileText, Shield } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import Login from './Login';
 import './Admin.css';
 
 const AdminLayout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -15,16 +16,22 @@ const AdminLayout = () => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setLoading(false);
+      if (session && (session.user.email === 'admin@esmasportwear.com' || session.user.email === 'alexmacuin@esmasportwear.com')) {
+        navigate('/superadmin');
+      }
     });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      if (session && (session.user.email === 'admin@esmasportwear.com' || session.user.email === 'alexmacuin@esmasportwear.com')) {
+        navigate('/superadmin');
+      }
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [navigate]);
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -56,6 +63,11 @@ const AdminLayout = () => {
           <h2>ESMA ADMIN</h2>
         </div>
         <nav className="admin-nav">
+          {(session.user.email === 'admin@esmasportwear.com' || session.user.email === 'alexmacuin@esmasportwear.com') && (
+            <Link to="/superadmin" style={{ color: 'var(--primary)', fontWeight: 'bold', borderBottom: '1px solid #222', paddingBottom: '1rem', marginBottom: '0.5rem', display: 'flex', gap: '10px' }} onClick={closeMenu}>
+              <Shield size={20} color="var(--primary)" /> Control Maestro
+            </Link>
+          )}
           <Link to="/admin" className={location.pathname === '/admin' ? 'active' : ''} onClick={closeMenu}>
             <LayoutDashboard size={20} /> Dashboard
           </Link>

@@ -4,7 +4,7 @@ import { Lock, ArrowLeft } from 'lucide-react';
 import './Admin.css';
 
 const Login = ({ onLogin }) => {
-  const [email, setEmail] = useState('admin@esmasportwear.com');
+  const [email, setEmail] = useState('esma');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -14,8 +14,9 @@ const Login = ({ onLogin }) => {
     setLoading(true);
     setError(null);
     try {
+      const formattedEmail = email.includes('@') ? email : `${email}@esmasportwear.com`;
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+        email: formattedEmail,
         password,
       });
 
@@ -38,12 +39,12 @@ const Login = ({ onLogin }) => {
         
         <form onSubmit={handleLogin}>
           <div className="form-group">
-            <label>Correo Electrónico</label>
+            <label>Usuario</label>
             <input 
-              type="email" 
+              type="text" 
               value={email} 
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="tu@correo.com"
+              placeholder="Escribe tu usuario..."
               required 
             />
           </div>

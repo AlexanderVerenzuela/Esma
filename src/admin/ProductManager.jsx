@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Upload, Trash2, Edit, Search } from 'lucide-react';
-import { supabase } from '../supabaseClient';
+import { supabase, getTenantId } from '../supabaseClient';
 
 const ProductManager = () => {
   const [products, setProducts] = useState([]);
@@ -27,7 +27,11 @@ const ProductManager = () => {
 
   const fetchCategories = async () => {
     try {
-      const { data, error } = await supabase.from('categories').select('*');
+      const tenantId = await getTenantId();
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .eq('tenant_id', tenantId);
       if (!error) setCategories(data || []);
     } catch (err) {
       console.error(err);
@@ -36,12 +40,14 @@ const ProductManager = () => {
 
   const fetchProducts = async () => {
     try {
+      const tenantId = await getTenantId();
       const { data, error } = await supabase
         .from('products')
         .select(`
           *,
           categories:category_id (name)
         `)
+        .eq('tenant_id', tenantId)
         .order('created_at', { ascending: false });
         
       if (error) throw error;
@@ -101,7 +107,9 @@ const ProductManager = () => {
         imageUrl = await uploadImage(formData.mainImage);
       }
       
+      const tenantId = await getTenantId();
       const productData = {
+        tenant_id: tenantId,
         code: formData.code || `PROD-${Date.now()}`,
         name: formData.name,
         category_id: parseInt(formData.categoryId),
@@ -114,7 +122,11 @@ const ProductManager = () => {
       }
 
       if (editingId) {
-        const { error } = await supabase.from('products').update(productData).eq('id', editingId);
+        const { error } = await supabase
+          .from('products')
+          .update(productData)
+          .eq('id', editingId)
+          .eq('tenant_id', tenantId);
         if (error) throw error;
       } else {
         productData.gallery = [];
@@ -158,7 +170,12 @@ const ProductManager = () => {
         }
       }
 
-      const { error } = await supabase.from('products').delete().eq('id', product.id);
+      const tenantId = await getTenantId();
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', product.id)
+        .eq('tenant_id', tenantId);
       if (error) throw error;
       fetchProducts();
     } catch (err) {

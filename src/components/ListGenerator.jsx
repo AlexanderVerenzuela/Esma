@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { supabase } from '../supabaseClient';
+import { supabase, getTenantId, getTenantSlug } from '../supabaseClient';
 import { ArrowLeft, Plus, Trash2, Send } from 'lucide-react';
 import Navbar from './Navbar';
 import './ListGenerator.css';
@@ -9,6 +9,7 @@ const ListGenerator = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
+  const [tenantSlug, setTenantSlug] = useState('default');
 
   const [clientName, setClientName] = useState('');
   const [teamName, setTeamName] = useState('');
@@ -23,8 +24,15 @@ const ListGenerator = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    setTenantSlug(getTenantSlug());
     const fetchProduct = async () => {
-      const { data } = await supabase.from('products').select('*').eq('id', productId).single();
+      const tenantId = await getTenantId();
+      const { data } = await supabase
+        .from('products')
+        .select('*')
+        .eq('id', productId)
+        .eq('tenant_id', tenantId)
+        .single();
       if (data) setProduct(data);
     };
     fetchProduct();
@@ -64,7 +72,9 @@ const ListGenerator = () => {
       // Create a clean array without the internal 'id' used for React keys
       const cleanData = validPlayers.map(({ id, ...rest }) => rest);
 
+      const tenantId = await getTenantId();
       const { error } = await supabase.from('team_lists').insert([{
+        tenant_id: tenantId,
         client_name: clientName,
         team_name: teamName,
         design_id: productId,
@@ -76,7 +86,9 @@ const ListGenerator = () => {
       setSuccess(true);
       
       // Open WhatsApp in a new tab
-      const message = `Hola ESMA Sportwear, acabo de enviar la lista de jugadores para mi equipo: *${teamName}*.`;
+      const message = tenantSlug === 'demo'
+        ? `Hola, acabo de enviar la lista de jugadores para mi equipo: *${teamName}*.`
+        : `Hola ESMA Sportwear, acabo de enviar la lista de jugadores para mi equipo: *${teamName}*.`;
       const encodedMsg = encodeURIComponent(message);
       
       // Detect mobile to use standard wa.me link, otherwise force WhatsApp Web
@@ -252,7 +264,7 @@ const ListGenerator = () => {
                 onClick={handleSubmit}
                 disabled={loading}
               >
-                {loading ? 'Enviando...' : <><Send size={20} /> Enviar Lista a ESMA</>}
+                {loading ? 'Enviando...' : <><Send size={20} /> Enviar Lista {tenantSlug === 'demo' ? '' : 'a ESMA'}</>}
               </button>
             </div>
           </div>

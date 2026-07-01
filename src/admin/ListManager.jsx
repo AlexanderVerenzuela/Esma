@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../supabaseClient';
+import { supabase, getTenantId } from '../supabaseClient';
 import { Download, Eye, X } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import './Admin.css';
@@ -15,12 +15,14 @@ const ListManager = () => {
 
   const fetchLists = async () => {
     try {
+      const tenantId = await getTenantId();
       const { data, error } = await supabase
         .from('team_lists')
         .select(`
           *,
           product:design_id (name)
         `)
+        .eq('tenant_id', tenantId)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -36,7 +38,12 @@ const ListManager = () => {
   const deleteList = async (id) => {
     if (window.confirm('¿Seguro que deseas eliminar esta lista?')) {
       try {
-        const { error } = await supabase.from('team_lists').delete().eq('id', id);
+        const tenantId = await getTenantId();
+        const { error } = await supabase
+          .from('team_lists')
+          .delete()
+          .eq('id', id)
+          .eq('tenant_id', tenantId);
         if (error) throw error;
         setLists(lists.filter(l => l.id !== id));
       } catch (err) {

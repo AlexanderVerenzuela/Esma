@@ -11,6 +11,7 @@ import ListManager from './admin/ListManager';
 import Settings from './admin/Settings';
 import QuoteGenerator from './admin/QuoteGenerator';
 import { SiteProvider } from './context/SiteContext';
+import SuperAdminLayout from './admin/SuperAdminLayout';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './App.css';
@@ -34,6 +35,7 @@ function App() {
         <Routes>
           <Route path="/" element={<PublicSite />} />
           <Route path="/armar-lista/:productId" element={<ListGenerator />} />
+          <Route path="/superadmin" element={<SuperAdminLayout />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="lists" element={<ListManager />} />

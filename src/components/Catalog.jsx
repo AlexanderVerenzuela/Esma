@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Search, ArrowRight, ListPlus, X } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { supabase } from '../supabaseClient';
+import { supabase, getTenantId } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import EditableText from './editor/EditableText';
 
@@ -59,7 +59,11 @@ const Catalog = () => {
 
   const fetchData = async () => {
     try {
-      const { data: catData, error: catError } = await supabase.from('categories').select('*');
+      const tenantId = await getTenantId();
+      const { data: catData, error: catError } = await supabase
+        .from('categories')
+        .select('*')
+        .eq('tenant_id', tenantId);
       if (catError) throw catError;
       setCategories([{ id: 'todos', name: 'Todos' }, ...catData]);
 
@@ -69,6 +73,7 @@ const Catalog = () => {
           *,
           categories:category_id (name)
         `)
+        .eq('tenant_id', tenantId)
         .order('created_at', { ascending: false });
       
       if (prodError) throw prodError;
